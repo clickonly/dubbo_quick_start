@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivityPrizeConfigDao" >
+  <resultMap id="BaseResultMap" type="org.dubbo.pojo.bean.activity.ActivityPrizeConfig" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ACTIVITY_ID" property="activityId" jdbcType="DECIMAL" />
+    <result column="NUM" property="num" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ACTIVITY_ID, NUM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from ACTIVITY_PRIZE_CONFIG
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ACTIVITY_PRIZE_CONFIG
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="org.dubbo.pojo.bean.activity.ActivityPrizeConfig" >
+    insert into ACTIVITY_PRIZE_CONFIG (ID, ACTIVITY_ID, NUM
+      )
+    values (#{id,jdbcType=DECIMAL}, #{activityId,jdbcType=DECIMAL}, #{num,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.dubbo.pojo.bean.activity.ActivityPrizeConfig" >
+    insert into ACTIVITY_PRIZE_CONFIG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="activityId != null" >
+        ACTIVITY_ID,
+      </if>
+      <if test="num != null" >
+        NUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=DECIMAL},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.dubbo.pojo.bean.activity.ActivityPrizeConfig" >
+    update ACTIVITY_PRIZE_CONFIG
+    <set >
+      <if test="activityId != null" >
+        ACTIVITY_ID = #{activityId,jdbcType=DECIMAL},
+      </if>
+      <if test="num != null" >
+        NUM = #{num,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.dubbo.pojo.bean.activity.ActivityPrizeConfig" >
+    update ACTIVITY_PRIZE_CONFIG
+    set ACTIVITY_ID = #{activityId,jdbcType=DECIMAL},
+      NUM = #{num,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="selectByActivityId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from ACTIVITY_PRIZE_CONFIG
+    where activityid = #{activityId,jdbcType=DECIMAL}
+  </select>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.ProductClassDao">
+
+    <select id="getGoodsClass" parameterType="java.lang.String" resultType="org.dubbo.pojo.bean.product.GoodsClass" >
+
+        select * from wx_code where weid=#{weid}  and IS_ACTIVITY='Y' ORDER  by codevalue
+
+    </select>
+
+
+    <select id="getGoodsClassWid" resultType="java.lang.String">
+        select weid from wx_code where  IS_ACTIVITY='Y' group by weid
+    </select>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivityBidRecordDao" >
+
+    <insert id="insert" parameterType="org.dubbo.pojo.dto.activity.ActivityAuctionDto">
+        insert INTO ACTIVITY_BID_RECORD (ID,ACTIVITY_ID,UNIONID,OPENID,WEID,PRIZE_ID,AMOUNT,ADD_TIME,message,CODE,USERNAME,timestamp)
+        VALUES (#{id},#{activityId},#{unionid},#{openid},#{weid},#{prizeId},#{price},SYSDATE,#{message},#{code},#{username},#{timestamp})
+
+    </insert>
+
+    <select id="getSeq" resultType="java.lang.Long">
+          select ACTIVITY_BID_RECORD_ID_SEQ.Nextval from DUAL
+    </select>
+
+    <select id="getActivityBidRecordList" resultType="org.dubbo.pojo.dto.activity.ActivityAuctionDto" parameterType="org.dubbo.pojo.dto.activity.ActivityAuctionDto">
+        SELECT *
+        FROM (SELECT A.*, ROWNUM RN
+        FROM (select id as id,
+                    ACTIVITY_ID as activityId,
+                    UNIONID as unionid,
+                    OPENID as openid,
+                    weid as weid,
+                    PRIZE_ID as prizeId,
+                    AMOUNT as price,
+                    to_char(ADD_TIME, 'yyyy-MM-dd HH24:mi:ss') as addTime ,message as message
+                    from ACTIVITY_BID_RECORD
+                    where 1 = 1
+                    <if test="activityId!=null">
+                        and ACTIVITY_ID=#{activityId}
+                    </if>
+                    <if test="unionid!='' and unionid!=null">
+                        and  UNIONID =#{unionid}
+                    </if>
+                    <if test="openid!='' and openid!=null">
+                        and  OPENID =#{openid}
+                    </if>
+                    <if test="prizeId!=null">
+                        and  PRIZE_ID =#{prizeId}
+                    </if>
+        ) A
+        WHERE <![CDATA[ ROWNUM <= #{endRow}]]>)
+        WHERE <![CDATA[ RN > #{startRow}]]>
+
+    </select>
+    <select id="getActivityBidRecordCount" parameterType="org.dubbo.pojo.dto.activity.ActivityAuctionDto" resultType="java.lang.Integer">
+        select count(*)
+        from ACTIVITY_BID_RECORD
+        where 1 = 1
+        <if test="activityId!=null">
+            and ACTIVITY_ID=#{activityId}
+        </if>
+        <if test="unionid!='' and unionid!=null">
+            and  UNIONID =#{unionid}
+        </if>
+        <if test="openid!='' and openid!=null">
+            and  OPENID =#{openid}
+        </if>
+        <if test="prizeId!=null">
+            and  PRIZE_ID =#{prizeId}
+        </if>
+
+    </select>
+</mapper>

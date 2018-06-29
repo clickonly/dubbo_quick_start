@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.CardMainDao">
+
+
+    <select id="getCardMain" resultType="org.dubbo.pojo.bean.user.CardMain" parameterType="java.lang.String"> <!-- -->
+        select a.id,
+        a.RENTID as rentId,
+        a.WEID as weId,
+        a.OPENID as openId,
+        a.CARDTYPE as cardType,
+        a.CARDNO as cardNo,
+        a.USERNAME as userName,
+        a.JFYE as jfye,
+        a.JFTOTAL as jfTotal,
+        a.JFXF as jfxf,
+        a.JFSIGN as jfSign,
+        to_char(a.birthday, 'yyyy-MM-dd') as birthdayStr,
+        a.XFJE as xfjf,
+        a.TEL as tel,
+        a.ADDRESS as address,
+        a.SEX as sex,
+        a.EMAIL as email,
+        a.STATUS as status,
+        a.REMARK as remark,
+        a.VALIDDATE as validDate,
+        a.NICKNAME AS nickName,
+        custpoint.Fgetcustjf( #{openId}) as integral,
+        fgetuserlevel( #{openId}) as cardlevel,
+        fgetcynum( #{openId}) as cynum,
+        Custpoint.Fgetcustjfbyql( #{openId}) as dqlintegral,
+        B.C_VIPTYPE_ID as c_viptype_id, nvl(c.yt, 'null') as yt,
+        c.code as storeCode,
+        a.unionid as unionId
+        from cardmain a
+        left join  C_CLIENT_VIP@BOJUN B on A.REMARK = B.CARDNO
+        left join wx_store c on a.kkstore = c.id and c.status='Y'
+        inner JOIN wx_fans f on f.openid=a.openid
+        where a.openid =  #{openId} and f.subscribe='1'
+    </select>
+
+
+    <update id="updateCardMain" parameterType="org.dubbo.pojo.bean.user.CardMain"><!-- -->
+        update cardmain set
+         <if test="birthdayStr !=null and birthdayStr !='' ">
+             birthday=to_date(#{birthdayStr},'yyyy-MM-dd'),
+         </if>
+        <if test="email !=null and email !='' ">
+             EMAIL=#{email},
+        </if>
+        <if test="nickName !=null and nickName !='' ">
+         NICKNAME=#{nickName},
+        </if>
+        <if test="tel !=null and tel !='' ">
+            tel=#{tel},
+        </if>
+         MODIFYDATE=sysdate
+        where openid=#{openId}
+
+    </update>
+
+    <select id="getOpenid" parameterType="org.dubbo.pojo.bean.user.CardMain" resultType="java.lang.String">
+
+        select openid from cardmain where unionid=#{unionId} and weid=#{weId}
+    </select>
+</mapper>

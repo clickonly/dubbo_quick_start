@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.VoucherBaseDao">
+
+    <insert id="insert" parameterType="org.dubbo.pojo.bean.activity.VoucherBase">
+
+           INSERT INTO VOUCHER_BASE
+        (ID,
+         RENTID,
+         WEID,
+         OPENID,
+         NAME,
+         TYPE,
+         INSERTDATE,
+         STATUS,
+         HYKH,
+         SCLX,
+         KKDC,
+         MAXDATE,
+         MEMO,
+         INSERTSOURCE,
+         LINKSOURCE,
+         BODJT,
+         SC_RULEID,
+         AMT,
+         AWARID,
+         VALIDDATE,
+         <if test="ishot!='' and ishot!=null">
+             ISHOT,
+         </if>
+        <if test="isnew!='' and isnew!=null">
+            ISNEW,
+        </if>
+
+         INTEGRAL,
+         PPURL,
+         USERMEMO,
+         EXMEMO,
+         VOUTYPE,
+         EXPINTAI,
+         EXDETAILS,
+         USERVALIDITY,
+         EXMONTHID)
+      VALUES
+        (GET_SEQUENCES@BOJUN('WX_VOUCHERS'),
+          	 #{rentid},
+             #{weid},
+             #{openid},
+             #{name},
+             #{type},
+             SYSDATE,
+             #{status},
+             #{hykh},
+             #{sclx},
+             null,
+             #{maxdate},
+             #{memo},
+             #{insertsource},
+             #{linksource},
+             #{bodjt},
+             #{sc_ruleid},
+             #{amt},
+             #{awarid},
+             #{validdate},
+            <if test="ishot!='' and ishot!=null">
+                #{ishot},
+            </if>
+            <if test="isnew!='' and isnew!=null">
+                #{isnew},
+            </if>
+             #{integral},
+             #{ppurl},
+             #{usermemo},
+             #{exmemo},
+             #{voutype},
+             #{expintai},
+             #{exdetails},
+             #{uservalidity},
+             #{exmonthid}
+         )
+    </insert>
+</mapper>

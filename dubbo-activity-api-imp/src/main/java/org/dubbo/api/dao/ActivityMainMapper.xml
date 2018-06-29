@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivityMainDao" >
+
+
+  <select id="getActivityInfo" resultType="org.dubbo.pojo.bean.activity.ActivityMain" parameterType="java.lang.Long">
+    SELECT
+      ID AS ID,
+      ACTIVITY_NAME AS activityName ,
+      ACTIVITY_TYPE AS activityType ,
+      STATUS AS STATUS ,
+      CHECK_JSON AS checkJson ,
+      CONFIG_JSON as cofigJson,
+      PARENT_ID AS parentId
+    FROM ACTIVITY_MAIN
+    WHERE ID = #{ID} and STATUS='1'
+  </select>
+
+
+  <select id="getSubactivityList" resultType="org.dubbo.pojo.bean.activity.ActivityMain" parameterType="java.lang.Long">
+
+      SELECT
+      ID AS ID,
+      ACTIVITY_NAME AS activityName ,
+      ACTIVITY_TYPE AS activityType ,
+      STATUS AS STATUS ,
+       CHECK_JSON AS checkJson ,
+      CONFIG_JSON as cofigJson,
+      PARENT_ID AS parentId
+    FROM ACTIVITY_MAIN
+    WHERE PARENT_ID = #{parentId} and STATUS='1'
+  </select>
+    <select id="getTaskActivityMain" resultType="org.dubbo.pojo.bean.activity.ActivityMain" >
+        SELECT
+        ID AS ID,
+        ACTIVITY_NAME AS activityName ,
+        ACTIVITY_TYPE AS activityType ,
+        STATUS AS STATUS ,
+        CHECK_JSON AS checkJson ,
+        CONFIG_JSON as cofigJson,
+        PARENT_ID AS parentId
+        FROM ACTIVITY_MAIN
+        WHERE ACTIVITY_TYPE ='7' and STATUS='1'
+    </select>
+
+</mapper>

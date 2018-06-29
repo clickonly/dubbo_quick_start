@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans       
+    http://www.springframework.org/schema/beans/spring-beans.xsd       
+    http://code.alibabatech.com/schema/dubbo        
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="dubbo_provider" />
+
+	<!-- 使用zookeeper注册中心暴露服务地址 -->
+	<!-- 正式环境  192.168.0.112-->
+	<!--<dubbo:registry address="192.168.0.110:2181" protocol="zookeeper" />-->
+	<dubbo:registry address="127.0.0.1:2181" protocol="zookeeper" />
+
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="20812" />
+	<dubbo:provider timeout="7000" />
+
+	<!-- 声明需要暴露的服务接口 -->
+	<dubbo:service interface="org.dubbo.api.service.ActivityService" ref="activityService"  retries="0" loadbalance="roundrobin"/>
+	<bean id="activityService" class="org.dubbo.api.imp.ActivityServiceImpl"></bean>
+
+	<dubbo:service interface="org.dubbo.api.service.ActivityCheckService" ref="activityCheckService"  retries="0" loadbalance="roundrobin"/>
+	<bean id="activityCheckService" class="org.dubbo.api.imp.ActivityCheckServiceImpl"></bean>
+
+
+
+	<dubbo:service interface="org.dubbo.api.service.ActivityBidRecordService" ref="activityBidRecordService"  loadbalance="roundrobin"/>
+	<bean id="activityBidRecordService" class="org.dubbo.api.imp.ActivityBidRecordServiceImpl"></bean>
+
+
+	<dubbo:service interface="org.dubbo.api.service.SendActivityResultService" ref="sendActivityResultService"  loadbalance="roundrobin"/>
+	<bean id="sendActivityResultService" class="org.dubbo.api.imp.SendActivityResultServiceImpl"></bean>
+
+	<dubbo:service interface="org.dubbo.api.service.MessageService" ref="messageService"  loadbalance="roundrobin"/>
+	<bean id="messageService" class="org.dubbo.api.imp.MessageServiceImpl"></bean>
+
+
+	<dubbo:service interface="org.dubbo.api.service.CouponService" ref="couponService"  loadbalance="roundrobin"/>
+	<bean id="couponService" class="org.dubbo.api.imp.CouponServiceImpl"></bean>
+
+	<dubbo:service interface="org.dubbo.api.service.CheckActivityRuleService" ref="checkActivityRuleService"  loadbalance="roundrobin"/>
+	<bean id="checkActivityRuleService" class="org.dubbo.api.imp.CheckActivityRuleServiceImpl"></bean>
+
+
+	<dubbo:reference id="userIntegralService" interface="org.dubbo.api.service.UserIntegralService" check="false"/>
+
+	<dubbo:reference id="userService" interface="org.dubbo.api.service.UserService" check="false"/>
+	<import resource="classpath*:applicationMybatis.xml" />
+</beans>

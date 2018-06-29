@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivityWinResultDao" >
+  <resultMap id="BaseResultMap" type="org.dubbo.pojo.bean.activity.ActivityWinResult" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ACTIVITY_ID" property="activityId" jdbcType="DECIMAL" />
+    <result column="UNIONID" property="unionid" jdbcType="VARCHAR" />
+    <result column="OPENID" property="openid" jdbcType="VARCHAR" />
+    <result column="WEID" property="weid" jdbcType="VARCHAR" />
+    <result column="ADD_TIME" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="PRIZE_ID" property="prizeId" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="WIN_TIME" property="winTime" jdbcType="DECIMAL" />
+    <result column="ACTIVATION_CODE" property="activationCode" jdbcType="VARCHAR" />
+    <result column="INTEGRAL" property="integral" jdbcType="DECIMAL" />
+      <result column="COLOUR_NAME" property="colourName" jdbcType="VARCHAR" />
+      <result column="SIZE_NAME" property="sizeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ACTIVITY_ID, UNIONID, OPENID, WEID, ADD_TIME, PRIZE_ID, STATUS,WIN_TIME,ACTIVATION_CODE,INTEGRAL,COLOUR_NAME,SIZE_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from ACTIVITY_WIN_RESULT
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ACTIVITY_WIN_RESULT
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="org.dubbo.pojo.bean.activity.ActivityWinResult" >
+    insert into ACTIVITY_WIN_RESULT (ID, ACTIVITY_ID, UNIONID, 
+      OPENID, WEID, ADD_TIME, 
+      PRIZE_ID, STATUS,WIN_TIME,INTEGRAL)
+    values (#{id}, #{activityId}, #{unionid},
+      #{openid}, #{weid}, #{addTime},
+      #{prizeId}, #{status},#{winTime},#{integral})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="org.dubbo.pojo.bean.activity.ActivityWinResult" >
+    update ACTIVITY_WIN_RESULT
+    set ACTIVITY_ID = #{activityId,jdbcType=DECIMAL},
+      UNIONID = #{unionid,jdbcType=VARCHAR},
+      OPENID = #{openid,jdbcType=VARCHAR},
+      WEID = #{weid,jdbcType=VARCHAR},
+      ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      PRIZE_ID = #{prizeId,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <update id="updateActivityWinResultStatus" parameterType="org.dubbo.pojo.bean.activity.ActivityWinResult">
+     update ACTIVITY_WIN_RESULT
+        set  STATUS =#{status} where id=#{id}
+
+  </update>
+
+  <select id="getSeqId" resultType="java.lang.Long">
+     select seq_activity_win_result_id.nextval from DUAL
+  </select>
+
+  <select id="getUserPrizeList" resultType="java.util.Map" parameterType="org.dubbo.pojo.bean.activity.ActivityWinResult">
+    select b.prize_name,count(*) as num from Activity_Win_Result a left join activity_prize b on a.prize_id = b.id
+    where a.unionid = #{unionId} and a.status = 1 and a.activity_id = #{activityId} group by b.prize_name
+  </select>
+
+  <select id="getLotteryRecord" resultType="java.util.Map" parameterType="org.dubbo.pojo.bean.activity.ActivityWinResult">
+    select a.ACTIVITY_ID, a.UNIONID, a.OPENID, a.WEID, a.ADD_TIME, a.PRIZE_ID, a.STATUS,b.prize_name
+    from Activity_Win_Result a left join activity_prize b on a.prize_id = b.id
+    where a.unionid = #{unionId} and a.activity_id = #{activityId} order by add_time desc
+  </select>
+
+
+  <select id="getErrorActivityWinResultList" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" />  from Activity_Win_Result where status='-1'
+  </select>
+
+
+  <select id="getActivityWinResultListByActivityId" parameterType="org.dubbo.pojo.dto.activity.ActivityDto" resultMap="BaseResultMap">
+
+    select     <include refid="Base_Column_List" />
+    from ACTIVITY_WIN_RESULT
+    where 1=1
+    <if test="activityId !=null and activityId !=''">
+      and ACTIVITY_ID=#{activityId}
+    </if>
+    <if test="unionId !=null and unionId !=''">
+      and UNIONID=#{unionId}
+    </if>
+    <if test="openId !=null and openId !=''">
+    and openid=#{openId}
+  </if>
+    <if test="weid !=null and weid !=''">
+      and WEID=#{weid}
+    </if>
+
+  </select>
+
+
+  <select id="getOnetLotteryRecord" resultType="java.util.Map" parameterType="org.dubbo.pojo.bean.activity.ActivityWinResult">
+   select * from (select a.ACTIVITY_ID, a.UNIONID, a.OPENID, a.WEID, a.ADD_TIME, a.PRIZE_ID, a.STATUS,b.prize_name
+    from Activity_Win_Result a left join activity_prize b on a.prize_id = b.id
+    where a.unionid = #{unionId} and a.activity_id = #{activityId} order by add_time desc) where  rownum=1
+  </select>
+
+
+  <update id="updateActivationCode" parameterType="org.dubbo.pojo.bean.activity.ActivityWinResult">
+      update Activity_Win_Result set ACTIVATION_CODE=#{activationCode} where id=#{id}
+  </update>
+
+  <select id="getActivityWinResultById"  parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select     <include refid="Base_Column_List" />
+    from ACTIVITY_WIN_RESULT where id=#{id}
+
+  </select>
+
+  <select id="getPrizeRecordByActivityType"  resultType="org.dubbo.pojo.bean.activity.ActivityWinResult" parameterType="org.dubbo.pojo.dto.activity.ActivityDto" >
+   select t.ID,
+       t.ACTIVITY_ID as activityId,
+       t.            UNIONID as unionid,
+       t.            OPENID as openid,
+       t.WEID as weid,
+       t.            ADD_TIME as addTime,
+       t.            PRIZE_ID as prizeId,
+       t.            STATUS as status,
+       t.            WIN_TIME as winTime,
+       t.            ACTIVATION_CODE as activationCode,
+       t.            INTEGRAL as integral
+  from activity_win_result t
+ inner join activity_main m
+    on m.id = t.activity_id
+   and m.activity_type = #{activityType}
+   and m.parent_id = #{activityId}
+    <if test="unionId !=null and unionId !=''">
+      and t.UNIONID=#{unionId}
+    </if>
+      order by t.add_time desc
+
+
+  </select>
+    <select id="getActivityWinResultListByActivityIdList"  resultType="org.dubbo.pojo.bean.activity.ActivityWinResult" parameterType="org.dubbo.pojo.dto.activity.PrizeRecordDto" >
+        select t.ID,
+        t.ACTIVITY_ID as activityId,
+        t.            UNIONID as unionid,
+        t.            OPENID as openid,
+        t.WEID as weid,
+        t.            ADD_TIME as addTime,
+        t.            PRIZE_ID as prizeId,
+        t.            STATUS as status,
+        t.            WIN_TIME as winTime,
+        t.            ACTIVATION_CODE as activationCode,
+        t.            INTEGRAL as integral
+        from activity_win_result t
+        inner join activity_main m
+        on m.id = t.activity_id
+        <if test="unionId !=null and unionId !=''">
+            and t.UNIONID=#{unionId}
+        </if>
+        <if test="activityIdList!=null ">
+            and t.activity_id in
+            <foreach collection="activityIdList" index="index" item="activityId" open="(" separator="," close=")">
+                #{activityId}
+            </foreach>
+        </if>
+        order by t.add_time desc
+
+
+    </select>
+
+
+    <update id="updateSize" parameterType="org.dubbo.pojo.bean.activity.ActivityWinResult">
+        update activity_win_result
+        set COLOUR_NAME=#{colourName}, SIZE_NAME=#{sizeName}
+        where ACTIVITY_ID=#{activityId}
+        and UNIONID=#{unionid}
+        and OPENID=#{openid}
+        and PRIZE_ID=#{prizeId}
+
+    </update>
+
+    <select id="sendAddressIsNullActivityWinResult" resultType="org.dubbo.pojo.bean.activity.ActivityWinResult" >
+        select t.ID,
+               t.ACTIVITY_ID as activityId,
+               t.            UNIONID as unionid,
+               t.            OPENID as openid,
+               t.WEID as weid,
+               t.            ADD_TIME as addTime,
+               t.            PRIZE_ID as prizeId,
+               t.            STATUS as status,
+               t.            WIN_TIME as winTime,
+               t.            ACTIVATION_CODE as activationCode,
+               t.            INTEGRAL as integral
+          from activity_win_result t
+         inner join activity_prize p
+            on p.id = t.prize_id
+         left join activity_address l
+            on l.activity_id = t.activity_id
+           and l.prize_id = t.prize_id
+           and l.openid = t.openid
+           and l.unionid = t.unionid
+         where p.prize_type in ('6', '8') and l.province_name is null
+
+    </select>
+</mapper>

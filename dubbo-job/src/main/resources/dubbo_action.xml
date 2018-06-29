@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	           http://www.springframework.org/schema/beans/spring-beans.xsd
+	                   http://code.alibabatech.com/schema/dubbo
+	                           http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+	<!--<dubbo:application name="consumer-of-helloworld-app"/> -->
+
+	<!-- 使用multicast广播注册中心暴露发现服务地址 -->
+	<!--<dubbo:registry address="multicast://224.5.6.7:1234"/> -->
+
+	<!-- 公共信息，也可以用dubbo.properties配置 -->
+	<dubbo:application name="annotation-consumer" />
+	<!-- 正式环境  192.168.0.112-->
+	<dubbo:registry address="127.0.0.1:2181" protocol="zookeeper" />
+	<!-- 扫描注解包路径，多个包用逗号分隔，不填pacakge表示扫描当前ApplicationContext中所有的类 -->
+	<!--<dubbo:annotation package="com.alibaba.dubbo.demo"/> -->
+	<dubbo:consumer timeout="70000" />
+
+
+	<dubbo:reference id="goodsClassService" interface="org.dubbo.api.service.GoodsClassService" check="false"/>
+	<dubbo:reference id="productService" interface="org.dubbo.api.service.ProductService" check="false"/>
+	<!--中奖结果 -->
+	<dubbo:reference id="sendActivityResultService" interface="org.dubbo.api.service.SendActivityResultService" check="false"/>
+	<!-- 优惠券-->
+	<dubbo:reference id="couponService" interface="org.dubbo.api.service.CouponService" check="false"/>
+	<!-- 消息发送-->
+	<dubbo:reference id="messageService" interface="org.dubbo.api.service.MessageService" check="false"/>
+	<!-- 竞价记录保存-->
+	<dubbo:reference interface="org.dubbo.api.service.ActivityBidRecordService" id="activityBidRecordService" check="false"/>
+	<dubbo:reference id="activityService" interface="org.dubbo.api.service.ActivityService" check="false"/>
+	<dubbo:reference id="userIntegralService" interface="org.dubbo.api.service.UserIntegralService" check="false"/>
+
+	<!-- 声明需要引用的服务接口 -->
+
+</beans>

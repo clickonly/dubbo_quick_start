@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.CardMainDao">
+
+
+    <select id="getCardMain" resultType="org.dubbo.pojo.bean.user.CardMain" parameterType="String"> <!-- -->
+        select a.id,
+        a.RENTID as rentId,
+        a.WEID as weId,
+        a.OPENID as openId,
+        a.CARDTYPE as cardType,
+        a.CARDNO as cardNo,
+        a.USERNAME as userName,
+        a.JFYE as jfye,
+        a.JFTOTAL as jfTotal,
+        a.JFXF as jfxf,
+        a.JFSIGN as jfSign,
+        to_char(a.birthday, 'yyyy-MM-dd') as birthdayStr,
+        a.XFJE as xfjf,
+        a.TEL as tel,
+        a.ADDRESS as address,
+        a.SEX as sex,
+        a.EMAIL as email,
+        a.STATUS as status,
+        a.REMARK as remark,
+        a.VALIDDATE as validDate,
+        a.NICKNAME AS nickName,
+        custpoint.Fgetcustjf( #{openId}) as integral,
+        fgetuserlevel( #{openId}) as cardlevel,
+        fgetcynum( #{openId}) as cynum,
+        Custpoint.Fgetcustjfbyql( #{openId}) as dqlintegral,
+        B.C_VIPTYPE_ID as c_viptype_id, nvl(c.yt, 'null') as yt,
+        c.code as storeCode,
+        a.unionid as unionId,
+        f.headimgurl,
+        b.c_viptype_id,
+        ty.levelid,
+        ty.zk as discount
+        from cardmain a
+        INNER join C_CLIENT_VIP@BOJUN B on A.CARDNO = B.CARDNO
+        INNER join wx_fans f on a.openid=f.openid
+        left join wx_store c on a.kkstore = c.id and c.status='Y'
+        left join cardtype ty on b.c_viptype_id=ty.id
+        where a.openid = #{openId}
+    </select>
+
+
+    <update id="updateCardMain" parameterType="org.dubbo.pojo.bean.user.CardMain"><!-- -->
+        update cardmain set
+        <if test="birthdayStr !=null and birthdayStr !='' ">
+            birthday=to_date(#{birthdayStr},'yyyy-MM-dd'),
+        </if>
+        <if test="email !=null and email !='' ">
+            email=#{email},
+        </if>
+        <if test="nickName !=null and nickName !='' ">
+            NICKNAME=#{nickName},
+        </if>
+        <if test="tel !=null and tel !='' ">
+            tel=#{tel},
+        </if>
+        <if test="remark !=null and remark !='' ">
+            remark=#{remark},
+        </if>
+        <if test="userName !=null and userName !='' ">
+            userName=#{userName},
+        </if>
+        <if test="cardType !=null and cardType !='' ">
+            cardType=#{cardType},
+        </if>
+        MODIFYDATE=sysdate
+        where openId=#{openId}
+
+    </update>
+
+    <insert id="insertCardMain" parameterType="org.dubbo.pojo.bean.user.CardMain">
+        INSERT INTO CardMain
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            rentId,
+            id,
+            <if test="weId !=null ">
+                weId,
+            </if>
+            <if test="openId !=null and openId !='' ">
+                openId,
+            </if>
+            <if test="cardType !=null ">
+                cardType,
+            </if>
+            <if test="cardNo !=null and cardNo !='' ">
+                cardNo,
+            </if>
+            <if test="userName !=null and userName !='' ">
+                userName,
+            </if>
+            <if test="jfye !=null ">
+                jfye,
+            </if>
+            <if test="jfTotal !=null ">
+                jfTotal,
+            </if>
+            <if test="jfxf !=null ">
+                jfxf,
+            </if>
+            <if test="jfSign !=null ">
+                jfSign,
+            </if>
+            <if test="xfje !=null ">
+                xfje,
+            </if>
+            <if test="tel !=null and tel !='' ">
+                tel,
+            </if>
+            <if test="birthday !=null ">
+                birthday,
+            </if>
+            <if test="address !=null and address !='' ">
+                address,
+            </if>
+            <if test="sex !=null and sex !='' ">
+                sex,
+            </if>
+            <if test="email !=null and email !='' ">
+                email,
+            </if>
+            <if test="modifyDate !=null ">
+                modifyDate,
+            </if>
+            <if test="inputDate !=null ">
+                inputDate,
+            </if>
+            <if test="status !=null and status !='' ">
+                status,
+            </if>
+            <if test="remark !=null and remark !='' ">
+                remark,
+            </if>
+            <if test="isLink !=null and isLink !='' ">
+                isLink,
+            </if>
+            <if test="linkSource !=null and linkSource !='' ">
+                linkSource,
+            </if>
+            <if test="linkId !=null and linkId !='' ">
+                linkId,
+            </if>
+            <if test="validDate !=null ">
+                validDate,
+            </if>
+            <if test="roleId !=null ">
+                roleId,
+            </if>
+            <if test="kfId !=null ">
+                kfId,
+            </if>
+            <if test="kkStore !=null and kkStore !='' ">
+                kkStore,
+            </if>
+            <if test="isSend !=null and isSend !='' ">
+                isSend,
+            </if>
+            <if test="sendTime !=null ">
+                sendTime,
+            </if>
+            <if test="cdmunionId !=null and cdmunionId !='' ">
+                cdmunionId,
+            </if>
+            <if test="cdmSourceType !=null and cdmSourceType !='' ">
+                cdmSourceType,
+            </if>
+            <if test="cdmSourceVal !=null and cdmSourceVal !='' ">
+                cdmSourceVal,
+            </if>
+            <if test="isPostFitting !=null and isPostFitting !='' ">
+                isPostFitting,
+            </if>
+            <if test="PostFittingTime !=null ">
+                PostFittingTime,
+            </if>
+            <if test="unionId !=null and unionId !='' ">
+                unionId
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{rentId},
+            #{id},
+            <if test="weId !=null  ">
+                #{weId},
+            </if>
+            <if test="openId !=null and openId !='' ">
+                #{openId},
+            </if>
+            <if test="cardType !=null ">
+                #{cardType},
+            </if>
+            <if test="cardNo !=null and cardNo !='' ">
+                #{cardNo},
+            </if>
+            <if test="userName !=null and userName !='' ">
+                #{userName},
+            </if>
+            <if test="jfye !=null ">
+                nvl(#{jfye},0),
+            </if>
+            <if test="jfTotal !=null ">
+                nvl(#{jfTotal},0),
+            </if>
+            <if test="jfxf !=null ">
+                #{jfxf},
+            </if>
+            <if test="jfSign !=null ">
+                #{jfSign},
+            </if>
+            <if test="xfje !=null ">
+                #{xfje},
+            </if>
+            <if test="tel !=null and tel !='' ">
+                #{tel},
+            </if>
+            <if test="birthday !=null ">
+                #{birthday},
+            </if>
+            <if test="address !=null and address !='' ">
+                #{address},
+            </if>
+            <if test="sex !=null and sex !='' ">
+                #{sex},
+            </if>
+            <if test="email !=null and email !='' ">
+                #{email},
+            </if>
+            <if test="modifyDate !=null ">
+                #{modifyDate},
+            </if>
+            <if test="inputDate !=null ">
+                #{inputDate},
+            </if>
+            <if test="status !=null and status !='' ">
+                #{status},
+            </if>
+            <if test="remark !=null and remark !='' ">
+                #{remark},
+            </if>
+            <if test="isLink !=null and isLink !='' ">
+                #{isLink},
+            </if>
+            <if test="linkSource !=null and linkSource !='' ">
+                #{linkSource},
+            </if>
+            <if test="linkId !=null and linkId !='' ">
+                #{linkId},
+            </if>
+            <if test="validDate !=null ">
+                #{validDate},
+            </if>
+            <if test="roleId !=null ">
+                #{roleId},
+            </if>
+            <if test="kfId !=null ">
+                #{kfId},
+            </if>
+            <if test="kkStore !=null and kkStore !='' ">
+                #{kkStore},
+            </if>
+            <if test="isSend !=null and isSend !='' ">
+                #{isSend},
+            </if>
+            <if test="sendTime !=null ">
+                #{sendTime},
+            </if>
+            <if test="cdmunionId !=null and cdmunionId !='' ">
+                #{cdmunionId},
+            </if>
+            <if test="cdmSourceType !=null and cdmSourceType !='' ">
+                #{cdmSourceType},
+            </if>
+            <if test="cdmSourceVal !=null and cdmSourceVal !='' ">
+                #{cdmSourceVal},
+            </if>
+            <if test="isPostFitting !=null and isPostFitting !='' ">
+                #{isPostFitting},
+            </if>
+            <if test="PostFittingTime !=null ">
+                #{PostFittingTime},
+            </if>
+            <if test="unionId !=null and unionId !='' ">
+                #{unionId}
+            </if>
+        </trim>
+    </insert>
+    <select id="getId" resultType = "java.lang.Integer">
+        Select seq_CardMain.nextval From Dual
+    </select>
+    <delete id="deleteCardmainById" parameterType="java.lang.String">
+        delete from cardmain where id = #{id}
+    </delete>
+
+    <select id="getCardmainLogInfo" resultType="org.dubbo.pojo.bean.user.CardMainLog" parameterType="java.lang.String">
+        select id,
+        rentid,
+        weid,
+        openid,
+        cardtype,
+        cardno,
+        username,
+        jfye,
+        jftotal,
+        jfxf,
+        jfsign,
+        xfje,
+        tel,
+        birthday,
+        address,
+        sex,
+        email,
+        status,
+        remark,
+        modifydate,
+        inputdate,
+        validdate,
+        islink,
+        linksource,
+        linkid,
+        roleid,
+        kfid,
+        kkstore,
+        issend,
+        sendtime,
+        cdmunionid,
+        cdmsourcetype,
+        cdmsourceval,
+        ispostfitting,
+        postfittingtime
+        from cardmain
+        <where>
+            <if test="openid !=null and openid !='' ">
+                openid != #{openid}
+            </if>
+            <if test="tel !=null and tel !='' ">
+                and tel = #{tel}
+            </if>
+            <if test="weid !=null and weid !='' ">
+                and weid = #{weid}
+            </if>
+            <if test="id !=null and id !='' ">
+                and id = #{id}
+            </if>
+        </where>
+
+
+    </select>
+    <select id="getOpenIdList" resultType="java.lang.String" parameterType="java.lang.String">
+
+        select openid from cardmain where unionid=#{unionId}
+
+    </select>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.WxInfoDao">
+
+    <select id="getWxInfo" parameterType="java.lang.String" resultType="org.dubbo.pojo.bean.wx.WxInfo">
+          select a.appid,
+               a.accesstoken,
+               to_char(a.expire_time, 'yyyy-MM-dd HH24:mi:ss') as expire_time,
+               a.jsapi_ticket,
+               to_char(a.ticket_expire_times, 'yyyy-MM-dd HH24:mi:ss') as ticket_expire_times
+          from wx_accesstoken a
+         inner join wx_config c
+            on a.appid = c.appid
+        where c.weid=#{weid}
+    </select>
+</mapper>

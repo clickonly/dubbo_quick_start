@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.BarrageInfoDao" >
+
+    <insert id="insert" parameterType="org.dubbo.pojo.bean.activity.BarrageInfo">
+
+        INSERT  INTO  BARRAGE_INFO (ID,UNIONID,ACTIVITY_ID,MESSAGE,ADD_TIME,OPENID,WEID) VALUES
+         (#{id},#{unionId},#{activityId},#{message},sysdate,#{openId},#{weid})
+    </insert>
+
+
+    <select id="getSeq" resultType="java.lang.Long">
+        select SEQ_BARRAGE_INFO.Nextval from DUAL
+
+    </select>
+
+    <select id="getBarrageInfoList" resultType="org.dubbo.pojo.bean.activity.BarrageInfo" parameterType="org.dubbo.pojo.dto.activity.BarrageInfoDto">
+
+
+        select *
+        from (select ID,
+               UNIONID,
+               ACTIVITY_ID as activityId,
+               MESSAGE,
+               ADD_TIME,
+               OPENID,
+               WEID,
+               rownum      rn,
+               nickName
+          from (select b.*,c.username as nickName from BARRAGE_INFO b inner join cardmain c on b.openid=c.openid order by add_time desc)
+        where rownum &lt;= #{endRow})
+        where rn &gt;#{startRow}
+    </select>
+
+
+
+    <select id="getCount" resultType="java.lang.Integer" parameterType="org.dubbo.pojo.dto.activity.BarrageInfoDto">
+            select count(*) from BARRAGE_INFO b inner join cardmain c on b.openid=c.openid order by add_time desc
+    </select>
+
+</mapper>

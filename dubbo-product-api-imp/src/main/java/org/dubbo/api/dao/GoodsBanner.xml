@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.GoodsBannerDao">
+	<!-- 支持缓存配置 -->
+
+	<select id="getGoodsBannerList" resultType="org.dubbo.pojo.bean.product.GoodsBanner" parameterType="org.dubbo.pojo.bean.product.GoodsBanner" >
+				select * from wx_goods_banner where weid = #{weid} and typeval = #{typeval} and status = 'Y'
+
+	</select>
+
+</mapper>

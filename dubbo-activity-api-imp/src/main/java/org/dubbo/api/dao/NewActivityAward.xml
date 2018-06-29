@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.NewActivityAwardDao">
+
+    <parameterMap type="java.util.Map" id="recommendMap">
+        <parameter property="brand" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="parValue" mode="IN" jdbcType="DECIMAL"/>
+        <parameter property="discount" mode="IN" jdbcType="DECIMAL"/>
+        <parameter property="maxData" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="department" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="stores" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="cityName" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="maxNum" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="linkNo" mode="OUT" jdbcType="VARCHAR"/>
+    </parameterMap>
+    <select id="getNewActivityAwardBy" parameterType="java.lang.Integer" resultType="org.dubbo.pojo.bean.activity.NewActivityAward">
+        SELECT B.*
+        FROM NEW_ACTIVITY A, NEW_ACTIVITYAWARD B
+        WHERE A.ID = B.ACTIVITYID
+        AND B.ID = #{id}
+        AND B.TYPE = 'WXSC'
+        AND A.STARTTIME &lt; = SYSDATE
+        AND A.ENDTIME &gt; =  SYSDATE
+        AND A.IS_ONLINE = 'N'
+
+    </select>
+
+    <select id="getViewWxscgiftBy" parameterType="java.lang.Integer" resultType="org.dubbo.pojo.bean.activity.ViewWxscgift">
+        select * from VIEW_WXSCGIFT where id =#{id}
+
+    </select>
+
+    <select id="callWxscInsertVoucher" statementType="CALLABLE" parameterMap="recommendMap" >
+        <![CDATA[
+            call WXSC_INSERT_VOUCHER@BOJUN(?,?,?,?,?,?,?,?,?)
+              ]]>
+
+    </select>
+</mapper>

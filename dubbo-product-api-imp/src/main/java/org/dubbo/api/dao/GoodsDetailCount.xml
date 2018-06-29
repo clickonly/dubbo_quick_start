@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.GoodsDetailCountDao">
+	<!-- 支持缓存配置 -->
+
+	<select id="getGoodsCount" resultType="org.dubbo.pojo.bean.product.GoodsDetalCount" parameterType="org.dubbo.pojo.dto.product.GoodsCountDto" >
+		select detail.goodsid,count(detail.goodsid) as goodsCount from wx_orderdetail detail
+		inner join wx_orderhead head on detail.orderid=head.id and flag=#{status}
+		where
+			to_char(detail.inputdate, 'yyyy-MM-dd')&gt;=#{start_time} and
+			to_char(detail.inputdate, 'yyyy-MM-dd')&lt;=#{end_time}
+		group by detail.goodsid
+	</select>
+
+	<insert id="insert" parameterType="org.dubbo.pojo.bean.product.GoodsDetalCount">
+		  INSERT into GOODS_DETAL_COUNT (GOODSID,GOODSCOUNT) VALUES (#{goodsId},#{goodsCount})
+
+	</insert>
+
+	<delete id="deleteGoodsDetalCount">
+			delete from GOODS_DETAL_COUNT
+	</delete>
+</mapper>

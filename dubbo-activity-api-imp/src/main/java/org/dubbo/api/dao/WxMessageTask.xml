@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.WxMessageTaskDao">
+
+    <insert id="insert" parameterType="org.dubbo.pojo.bean.wx.WxMessageTask">
+
+  INSERT INTO wx_message_task
+      (rentid,
+       weid,
+       id,
+       openid,
+       templateid,
+       messagebody,
+       insertdate,
+       sendtimes,
+       sendtime,
+       success,
+       errcode,
+       errmsg)
+    VALUES
+      (#{rentid},
+       #{weid},
+       seq_wx_message_task.nextval,
+       #{openid},
+       #{templateid},
+       #{messagebody},
+       SYSDATE,
+       0,
+       NULL,
+       NULL,
+       NULL,
+       NULL)
+
+    </insert>
+</mapper>

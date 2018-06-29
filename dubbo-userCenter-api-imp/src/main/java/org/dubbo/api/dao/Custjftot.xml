@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.CustjftotDao">
+
+
+    <update id="updatetCustjftotInteger" parameterType="org.dubbo.pojo.bean.user.Custjftot">
+        update custjftot@bojun set cjtjf=cjtjf+#{integral},cjtfsdate=Sysdate where cjtcid=#{clentVipId} and cjtno=#{batch}
+    </update>
+
+    <insert id="insert" parameterType="org.dubbo.pojo.bean.user.Custjftot">
+        insert into custjftot@bojun (CJTCID,CJTNO,CJTJF,CJTFLAG,CJTFSDATE) VALUES  (#{clentVipId},#{batch},#{integral},'Y',Sysdate)
+
+    </insert>
+
+    <select id="getCustjftot" parameterType="org.dubbo.pojo.bean.user.Custjftot" resultType="org.dubbo.pojo.bean.user.Custjftot">
+        select
+            CJTCID as clentVipId ,
+            CJTNO as batch ,
+            CJTJF as integral
+            from custjftot@bojun
+       where cjtcid=#{clentVipId} and cjtno=#{batch} and CJTFLAG='Y' and CJTJF>0
+    </select>
+
+    <select id="checkCustjftot" parameterType="org.dubbo.pojo.bean.user.Custjftot" resultType="org.dubbo.pojo.bean.user.Custjftot">
+        select
+        CJTCID as clentVipId ,
+        CJTNO as batch ,
+        CJTJF as integral
+        from custjftot@bojun
+        where cjtcid=#{clentVipId} and cjtno=#{batch} and CJTFLAG='Y'
+    </select>
+
+
+
+    <select id="getCustjftotByBatch" parameterType="org.dubbo.pojo.bean.user.Custjftot" resultType="java.lang.Long">
+        select  NVL(SUM(CJTJF) ,0)
+        from custjftot@bojun
+        where cjtcid=#{clentVipId} and cjtno=#{batch} and CJTFLAG='Y' and CJTJF>0
+    </select>
+
+
+    <select id="getCustjftotByBatchByUnionid" parameterType="org.dubbo.pojo.bean.user.Custjftot" resultType="java.lang.Long">
+        select NVL(SUM(CJTJF) ,0)
+        from custjftot@bojun t
+         inner join c_client_vip@bojun v
+            on t.cjtcid = v.id
+           and v.unionid = #{unionid} and v.openmode != 'JT'
+        where cjtno=#{batch} and CJTFLAG='Y' and CJTJF>0
+    </select>
+
+
+    <select id="getListCustjftotByBatch" parameterType="org.dubbo.pojo.bean.user.Custjftot" resultType="org.dubbo.pojo.bean.user.Custjftot">
+        select
+            t.CJTCID as clentVipId ,
+            t.CJTNO as batch ,
+            t.CJTJF as integral
+        from custjftot@bojun t
+        inner join c_client_vip@bojun v
+            on t.cjtcid = v.id
+           and v.unionid = #{unionid} and v.openmode != 'JT'
+         where t.cjtno = #{batch} and t.cjtjf&gt;0 and t.CJTFLAG='Y'
+    </select>
+
+    <select id="getListCustjftotByOtherBatch" parameterType="org.dubbo.pojo.bean.user.Custjftot" resultType="org.dubbo.pojo.bean.user.Custjftot">
+        select
+        t.CJTCID as clentVipId ,
+        t.CJTNO as batch ,
+        t.CJTJF as integral
+        from custjftot@bojun t
+        inner join c_client_vip@bojun v
+        on t.cjtcid = v.id
+        and v.unionid = #{unionid}
+        and v.wxopenid&lt;&gt;#{openid} and v.openmode != 'JT'
+        where t.cjtno = #{batch} and t.cjtjf&gt;0 and t.CJTFLAG='Y'
+    </select>
+
+
+    <select id="getCustjftotByOtherBatch" parameterType="org.dubbo.pojo.bean.user.Custjftot" resultType="java.lang.Long">
+      select
+        NVL(SUM(t.CJTJF) ,0)
+        from custjftot@bojun t
+        inner join c_client_vip@bojun v
+        on t.cjtcid = v.id
+        and v.unionid = #{unionid}
+        and v.wxopenid&lt;&gt;#{openid}  and v.openmode != 'JT'
+        where t.cjtno = #{batch} and t.cjtjf&gt;0 and t.CJTFLAG='Y'
+    </select>
+</mapper>

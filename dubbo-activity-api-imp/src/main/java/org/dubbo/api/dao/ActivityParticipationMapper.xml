@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivityParticipationDao" >
+  <resultMap id="BaseResultMap" type="org.dubbo.pojo.bean.activity.ActivityParticipation" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ACTIVITY_ID" property="activityId" jdbcType="DECIMAL" />
+    <result column="OPENID" property="openid" jdbcType="VARCHAR" />
+    <result column="UNIONID" property="unionid" jdbcType="VARCHAR" />
+    <result column="WEID" property="weid" jdbcType="VARCHAR" />
+    <result column="ADD_TIME" property="addTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ACTIVITY_ID, OPENID, UNIONID, WEID, ADD_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ACTIVITY_PARTICIPATION
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ACTIVITY_PARTICIPATION
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="org.dubbo.pojo.bean.activity.ActivityParticipation" >
+    insert into ACTIVITY_PARTICIPATION (ID, ACTIVITY_ID, OPENID, 
+      UNIONID, WEID, ADD_TIME
+      )
+    values (#{id,jdbcType=DECIMAL}, #{activityId,jdbcType=DECIMAL}, #{openid,jdbcType=VARCHAR}, 
+      #{unionid,jdbcType=VARCHAR}, #{weid,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.dubbo.pojo.bean.activity.ActivityParticipation" >
+    insert into ACTIVITY_PARTICIPATION
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="activityId != null" >
+        ACTIVITY_ID,
+      </if>
+      <if test="openid != null" >
+        OPENID,
+      </if>
+      <if test="unionid != null" >
+        UNIONID,
+      </if>
+      <if test="weid != null" >
+        WEID,
+      </if>
+      <if test="addTime != null" >
+        ADD_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=DECIMAL},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null" >
+        #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="weid != null" >
+        #{weid,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.dubbo.pojo.bean.activity.ActivityParticipation" >
+    update ACTIVITY_PARTICIPATION
+    <set >
+      <if test="activityId != null" >
+        ACTIVITY_ID = #{activityId,jdbcType=DECIMAL},
+      </if>
+      <if test="openid != null" >
+        OPENID = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null" >
+        UNIONID = #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="weid != null" >
+        WEID = #{weid,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.dubbo.pojo.bean.activity.ActivityParticipation" >
+    update ACTIVITY_PARTICIPATION
+    set ACTIVITY_ID = #{activityId,jdbcType=DECIMAL},
+      OPENID = #{openid,jdbcType=VARCHAR},
+      UNIONID = #{unionid,jdbcType=VARCHAR},
+      WEID = #{weid,jdbcType=VARCHAR},
+      ADD_TIME = #{addTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.CustomerDao">
+
+
+    <select id="getCustomer" resultType="org.dubbo.pojo.bean.user.Customer" parameterType="java.lang.String"> <!-- -->
+        select * from customer where unionid=#{unionid} and cstatus='Y'
+    </select>
+
+    <insert id="insertCustomer" parameterType="org.dubbo.pojo.bean.user.Customer">
+        Insert Into Customer
+        (cid, cno, unionid, ccurjfye, lcastxfdate, cstatus,cinitweid)
+      Values
+        (#{cid}, #{cno}, #{unionid}, #{ccurjfye}, SYSDATE, #{cstatus},#{cinitweid})
+    </insert>
+
+    <select id="getCustomerNo" resultType="java.lang.String">
+        Select SEQ_GROUPNO.Nextval From Dual
+    </select>
+
+</mapper>

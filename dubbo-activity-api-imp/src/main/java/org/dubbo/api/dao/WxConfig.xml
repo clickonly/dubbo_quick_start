@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.WxConfigDao">
+
+    <select id="getWxConfig" parameterType="org.dubbo.pojo.bean.wx.WxConfig" resultType="org.dubbo.pojo.bean.wx.WxConfig">
+      select * from wx_config where 1=1
+      <if test="rentid!=null ">
+          and rentid =#{rentid}
+      </if>
+      <if test="weid!=null and weid!=''">
+          and weid =#{weid}
+      </if>
+
+    </select>
+</mapper>

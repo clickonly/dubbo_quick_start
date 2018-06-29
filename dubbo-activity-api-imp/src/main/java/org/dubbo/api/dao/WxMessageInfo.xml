@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.WxMessageInfoDao">
+
+
+    <insert id="insert" parameterType="org.dubbo.pojo.bean.wx.WxMessageInfo">
+         insert into wx_message_info
+              (id,
+               WEID,
+               openid,
+               TITLE1,
+               TITLE2,
+               DATETIME,
+               MESSAGETYPE,
+               ISENABLE,
+               TEMPLATE_ID)
+            values
+              (SEQ_WX_MESSAGE_INFO.NEXTVAL,
+               #{weid},
+               #{openid},
+               #{title},
+               #{title2},
+               sysdate,
+               #{messageType},
+               #{isEnable},
+               #{templateId})
+    </insert>
+</mapper>

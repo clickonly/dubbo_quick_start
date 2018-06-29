@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivityGiveUpDao" >
+
+    <insert id="insert" parameterType="org.dubbo.pojo.bean.activity.ActivityGiveUp">
+        INSERT  INTO ACTIVITY_GIVE_UP (ID,ACTIVITY_ID,OPENID,UNIONID,ADD_TIME) VALUES (#{id},#{activityId},#{openid},#{unionid},SYSDATE)
+
+    </insert>
+
+    <select id="getSeq" resultType="java.lang.Long">
+          select ACTIVITY_GIVE_UP_SEQ.Nextval from DUAL
+    </select>
+
+    <select id="getActivityGiveUpCount" parameterType="org.dubbo.pojo.dto.activity.ActivityDto" resultType="java.lang.Integer">
+        select count(*) from ACTIVITY_GIVE_UP
+        where 1=1
+        <if test="activityId!=null and activityId>0">
+            and ACTIVITY_ID=#{activityId}
+
+        </if>
+        <if test="unionId!=null and unionId!=''">
+            and UNIONID=#{unionId}
+
+        </if>
+
+    </select>
+</mapper>

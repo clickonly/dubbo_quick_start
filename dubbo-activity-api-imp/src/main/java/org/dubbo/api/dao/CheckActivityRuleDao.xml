@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.CheckActivityRuleDao" >
+    <select id="getWxFansResult" resultType="java.lang.Integer" parameterType="org.dubbo.pojo.dto.activity.ActivityDto">
+        select count(*) from wx_fans where
+        1 = 1
+        <if test="openId != null" >
+            and openid=#{openId}
+        </if>
+    </select>
+    <select id="getWxIntegral" resultType="java.lang.Integer" parameterType="org.dubbo.pojo.dto.activity.ActivityDto">
+         Select Nvl(Sum(a.Integral), 0)
+          FROM C_CLIENT_VIP@BOJUN a
+         WHERE  a.isactive ='Y'
+           AND A.VIPSTATE = 'Y'
+           and a.unionid = #{unionId}
+    </select>
+    <select id="getWxFan" resultType="org.dubbo.pojo.bean.user.WxFans" parameterType="org.dubbo.pojo.dto.activity.ActivityDto">
+        select *from wx_fans where unionid=#{unionId} and weid = #{weid}
+    </select>
+    <!--<select id="getUserLotteryTimes" resultType="java.lang.Integer" parameterType="org.dubbo.pojo.dto.activity.ActivityDto">-->
+        <!--select COUNT(*) from act_lottery_record WHERE openid = #{openId} and day = to_char(sysdate,'dd')-->
+    <!--</select>-->
+
+
+</mapper>

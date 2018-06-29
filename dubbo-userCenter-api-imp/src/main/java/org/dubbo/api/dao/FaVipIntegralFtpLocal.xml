@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.FaVipIntegralFtpLocalDao">
+
+        <insert id="insert" parameterType="org.dubbo.pojo.bean.activity.FaVipIntegralFtpLocal">
+
+            INSERT  into  FA_VIPINTEGRAL_FTP_LOCAL
+            (ID,AD_CLIENT_ID,AD_ORG_ID,OWNERID,MODIFIERID,CREATIONDATE,
+            MODIFIEDDATE,ISACTIVE,C_VIP_ID,DOCNO,ACTIVEID,CHANGDATE,AMT_ACTUAL,
+            INTEGRAL,DESCRIPTION,VIP_PAYAMT,INTEGRAL_UP,
+            IFUP_ISUSE,C_VIPINTEGRAL_REASON_ID,jf1,jf2,jf3)
+            VALUES
+            (get_sequences@bojun('FA_VIPINTEGRAL_FTP'),#{adClientId},#{adOrgId},#{ownerId},#{modifierId},sysdate,sysdate,#{isActive},
+            #{cVipId},#{docno},#{activeId}, To_Number(To_Char(Sysdate, 'yyyymmdd')),#{amtActual},#{integral},#{description},#{vipPayAmt},#{integralUp},#{ifUpIsuse},
+            #{cVipIntegralReasonId},#{jf1},#{jf2},#{jf3})
+        </insert>
+
+
+    <insert id="inserSendIntegralKey" parameterType="org.dubbo.pojo.dto.activity.SendIntergraError">
+
+        INSERT  into SEND_INTEGRAL_KEY (OPENID,UNIONID,INTEGRAL,ACTIVITYID,INFO,STATUS,ADDTIME) VALUES (#{openid},#{unionid},#{integral},#{activityId},#{info},0,Sysdate)
+    </insert>
+</mapper>

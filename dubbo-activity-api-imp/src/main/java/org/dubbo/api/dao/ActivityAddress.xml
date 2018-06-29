@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivityAddressDao" >
+
+    <select id="getActivityAddress" parameterType="org.dubbo.pojo.bean.activity.ActivityAddress" resultType="org.dubbo.pojo.bean.activity.ActivityAddress">
+
+        select t.openid,
+               t.unionid,
+               t.user_name     as userName,
+               t.tel           as tel,
+               t.province_id   as provinceId,
+               t.province_name as provinceName,
+               t.city_id       as cityId,
+               t.city_name     as cityName,
+               t.area_id       as areaId,
+               t.area_name     as areaName,
+               t.address       as address,
+               t.PRIZE_ID as prizeId
+          from ACTIVITY_ADDRESS t
+         where t.unionid = #{unionId}
+           and rownum = 1
+            <if test="prizeId !=null">
+                and PRIZE_ID=#{prizeId}
+            </if>
+
+    </select>
+
+
+    <select id="getDefaultActivityAddress" parameterType="org.dubbo.pojo.bean.activity.ActivityAddress" resultType="org.dubbo.pojo.bean.activity.ActivityAddress">
+        select t.openid,
+               t.unionid,
+               t.receiver_name    as userName,
+               t.receiver_mobile  as tel,
+               t.c_provinceid     as provinceId,
+               t.c_province_id    as provinceName,
+               t.c_cityid         as cityId,
+               t.c_city_id        as cityName,
+               t.c_districtid     as areaId,
+               t.c_district_id    as areaName,
+               t.receiver_address as address
+          from wx_fans_address t
+          where t.unionid=#{unionId} and rownum=1
+
+    </select>
+
+
+    <select id="getSeq" resultType="java.lang.Long">
+            select ACTIVITY_ADDRESS_ID_SEQ.Nextval from DUAL
+    </select>
+
+
+    <insert id="inserActivityAddress" parameterType="org.dubbo.pojo.bean.activity.ActivityAddress">
+        insert INTO ACTIVITY_ADDRESS VALUES (#{id},#{activityId},#{unionId},#{openId},#{weid},#{prizeId},#{tel},#{provinceId},#{provinceName},#{cityId},#{cityName},#{areaId},#{areaName},#{address},#{userName})
+    </insert>
+
+    <delete id="delActivityAddress" parameterType="org.dubbo.pojo.bean.activity.ActivityAddress">
+        DELETE  from ACTIVITY_ADDRESS where unionid=#{unionId} and PRIZE_ID=#{prizeId}
+
+    </delete>
+</mapper>

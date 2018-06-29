@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.BojunDao">
+
+    <update id="updateClentVip" parameterType="org.dubbo.pojo.bean.user.ClentVip">
+
+        update C_Client_Vip@Bojun
+        set
+        <if test="email !=null and email !='' ">
+        email=#{email},
+        </if>
+        <if test="birthday !=null  ">
+        birthday=#{birthday},
+        </if>
+        <if test="vipeame !=null and vipeame !='' ">
+        vipename=#{vipeame},
+        </if>
+        <if test="mobil !=null and mobil !='' ">
+            mobil=#{mobil},
+        </if>
+        <if test="description !=null and description !='' ">
+         description=#{description},
+        </if>
+     <if test="memberno !=null and memberno !='' ">
+      memberno=#{memberno},
+     </if>
+     <if test="is_bound !=null and is_bound !='' ">
+      is_bound=#{is_bound},
+     </if>
+     <if test="c_viptype_id !=null and c_viptype_id !='' ">
+      c_viptype_id=#{c_viptype_id},
+     </if>
+     <if test="bounddate !=null and bounddate !='' ">
+      bounddate=#{bounddate},
+     </if>
+     <if test="wxopenid !=null and wxopenid !='' ">
+      wxopenid=#{wxopenid},
+     </if>
+     <if test="openmode !=null and openmode !='' ">
+      openmode=#{openmode},
+     </if>
+     <if test="isactive !=null and isactive !='' ">
+      isactive=#{isactive},
+     </if>
+     <if test="unionid !=null and unionid !='' ">
+      unionid=#{unionid},
+     </if>
+        modifieddate=sysdate
+           where cardno = #{cardno}
+    </update>
+
+    <insert id="insertClentVip" parameterType="org.dubbo.pojo.bean.user.ClentVip">
+        INSERT INTO c_client_vip@bojun
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id,
+            ad_client_id,
+            ad_org_id,
+            isactive,
+            modifierid,
+            creationdate,
+            modifieddate,
+            ownerid,
+            cardno,
+            c_viptype_id,
+            idno,
+            vipname,
+            vipename,
+            sex,
+            birthday,
+            validdate,
+            creditremain,
+            country,
+            c_city_id,
+            address,
+            post,
+            phone,
+            mobil,
+            email,
+            vipstate,
+            <if test="c_store_id !='' and c_store_id!= null">
+                c_store_id,
+            </if>
+            <if test="c_customer_id !='' and c_customer_id!= null">
+                c_customer_id,
+            </if>
+            c_customerup_id,
+            integral,
+            enterdate,
+            pass_word,
+            m_retailno,
+            best_time,
+            building,
+            vipno,
+            storecardno,
+            m_retail_id,
+            c_oldvip_id,
+            entertype,
+            c_oldvip,
+            saler,
+            opencard_status,
+            opencarderid,
+            opencardtime,
+            integral_up,
+            isactivated,
+            validdate_intg,
+            ifup,
+            ifoff,
+            validdate_upintg,
+            opencard,
+            description,
+            oldcardno,
+            old_birthday,
+            isexpired,
+            opencarddate,
+            age,
+            c_servicearea_id,
+            description2,
+            c_opencardtype_id,
+            c_integralarea_id,
+            online_imp,
+            nickname,
+            lasttime,
+            is_password_check,
+            wxopenid,
+            is_bound,
+            openmode,
+            bounddate,
+            <if test="m_dim1_id !='' and m_dim1_id!= null">
+                m_dim1_id,
+            </if>
+            <if test="salesrep_id !='' and salesrep_id!= null">
+                salesrep_id,
+            </if>
+            <if test="is_sharebir !='' and is_sharebir!= null">
+                is_sharebir,
+            </if>
+            <if test="is_takebirvou !='' and is_takebirvou!= null">
+                is_takebirvou,
+            </if>
+            <if test="unionid !='' and unionid!= null">
+                unionid
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id},
+            37,
+            27,
+            'Y',
+            0,
+            SYSDATE,
+            SYSDATE,
+            0,
+            #{cardno},
+            #{c_viptype_id},
+            #{ido},
+            #{vipame},
+            NULL,
+            #{sex},
+            NULL,
+            to_number(to_char(add_months(TRUNC(SYSDATE), 10 * 12),'yyyymmdd')),
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NUll,
+            '@',
+            'Y',
+            <if test="c_store_id !='' and c_store_id!= null">
+                #{c_store_id},
+            </if>
+            <if test="c_customer_id !='' and c_customer_id!= null">
+                #{c_customer_id},
+            </if>
+            NULL,
+            0,
+            to_number(to_char(SYSDATE, 'yyyymmdd')),
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            'NEW',
+            NULL,
+            NULL,
+            1 ,
+            NULL,
+            NULL,
+            0 ,
+            'Y',
+            to_char(ADD_MONTHS(sysdate, 13), 'yyyymmdd'),
+            0,
+            0,
+            NULL,
+            'OPEN',
+            NULL,
+            NULL,
+            NULL ,
+            'N',
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            'Y' ,
+            NULL ,
+            NULL,
+            'N',
+            #{wxopenid},
+            'N',
+            'WE',
+            to_number(to_char(sysdate, 'yyyymmdd')),
+            <if test="m_dim1_id !='' and m_dim1_id!= null">
+                #{m_dim1_id},
+            </if>
+            <if test="salesrep_id !='' and salesrep_id!= null">
+                #{salesrep_id},
+            </if>
+            <if test="is_sharebir !='' and is_sharebir!= null">
+                'N',
+            </if>
+            <if test="is_takebirvou !='' and is_takebirvou!= null">
+                'N',
+            </if>
+            <if test="unionid !='' and unionid!= null">
+                #{unionid}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getCid" resultType = "java.lang.Integer">
+      Select Seq_C_VIP.NextVal From Dual
+    </select>
+
+    <select id="getClentVip" resultType="org.dubbo.pojo.bean.user.ClentVip"  parameterType="String">
+     Select * From c_client_vip@bojun where cardno=#{cardno}
+    </select>
+ 
+    <select id="getCustomerId" resultType="java.lang.Integer" parameterType="org.dubbo.pojo.bean.user.MiddleEntity">
+      SELECT customerid
+        FROM view_erp_store
+       WHERE id = #{ves_id}
+    </select>
+
+    <select id="getSalesrepId" resultType="java.lang.Integer" parameterType="org.dubbo.pojo.bean.user.MiddleEntity">
+      Select C.LINKID as es_linkid
+      From Employee_Link a, Wx_Store b, Employee_Store c
+     Where Openid = #{openid}
+       And B.Id = #{storeid}
+       And B.Code = C.Linkstore
+       And a.EMPID = c.empid
+    </select>
+    <select id="getJTCardLevel" resultType="java.lang.Integer" parameterType="org.dubbo.pojo.bean.user.MiddleEntity">
+      select nvl(id, 106)
+          as remarktype
+          from c_viptype@bojun
+         where to_number(discount) in
+               (select min(to_number(zk))
+                  from cardtype
+                 where id in
+                       (select cardtype
+                          from cardmain
+                         where remark in (select remark
+                                            from cardmain
+                                           where openid = #{openid})))
+           and id in (106, 107, 108)
+    </select>
+
+    <select id="getClentVipLmaxid" resultType="java.lang.Integer" >
+        Select Id
+        as lmaxid
+        From (Select t.Id
+                From C_Client_Vip@Bojun t, Cardtype a
+               Where Exists (Select 'x'
+                        From Cardtype s
+                       Where s.Weid = #{weid}
+                         And s.Linkid = t.C_Viptype_Id)
+                 And Mobil = #{mobil}
+                 And C_Viptype_Id = a.Id
+               Order By a.Levelid Desc, t.Integral Desc)
+       where Rownum = 1
+    </select>
+
+    <select id="getMaxLevelCardMain" resultType="org.dubbo.pojo.bean.user.MaxLevelCardMain" >
+        SELECT t.id lLinkId,
+        t.cardno,
+        s.id lCardTypeId,
+        s.levelid,
+        t.integral,
+        to_date(to_char(validdate), 'yyyy/mm/dd') validdate,
+        to_date(to_char(birthday), 'yyyy/mm/dd') birthday,
+        t.email,
+        t.vipname,
+        t.sex,
+        t.rowid,
+        t.c_store_id
+        FROM c_client_vip@bojun t, cardtype s
+        WHERE s.weid = #{weid}
+        AND s.linkid = t.c_viptype_id
+        AND t.mobil = #{mobil}
+        AND  t.id = #{lmaxid}
+        AND rownum = 1
+    </select>
+
+    <select id="isBound" resultType="java.lang.Integer">
+        select count(1) as len
+        from c_client_vip@bojun
+       where rowid = #{rowid}
+         and is_bound = 'Y'
+    </select>
+
+    <select id="getCustomerByBoJun" resultType="org.dubbo.pojo.bean.user.ClentVip">
+        select *
+        from c_client_vip@bojun
+        where cardno in (select remark from cardmain where openid = #{openId})
+    </select>
+
+
+    <select id="getUserIntergral" resultType="java.lang.Long" parameterType="java.lang.String">
+        select sum(c.integral)
+        from c_client_vip@bojun c
+        where 1=1
+        and c.openmode != 'JT' and  c.ISACTIVE='Y'
+        and c.unionid=#{unionid}
+
+    </select>
+
+    <select id="getUserIntergralByOpenid" resultType="java.lang.Integer" parameterType="java.lang.String">
+         select c.integral, m.openid, m.weid
+           from c_client_vip@bojun c
+          inner join cardmain m
+             on c.cardno = m.cardno
+          where 1 = 1
+            and c.openmode != 'JT'
+            and c.ISACTIVE = 'Y'
+            and m.openid= #{openid}
+
+    </select>
+
+    <select id="getCustjftotByOpenid"  parameterType="org.dubbo.pojo.bean.user.Custjftot" resultType="org.dubbo.pojo.bean.user.Custjftot">
+        SELECT c.cjtcid as clentVipId, c.cjtno as batch, c.cjtjf as integral
+          FROM custjftot@bojun c
+         inner join c_client_vip@bojun b
+            on c.cjtcid = b.id
+           and b.ISACTIVE = 'Y'
+         inner join cardmain m
+            on b.cardno = m.cardno and m.openid = #{openid}
+         where   c.cjtno=#{batch} and c.cjtjf>0
+           and c.cjtflag = 'Y' order by c.cjtno asc
+    </select>
+
+
+    <select id="getClentVipByUnionid" parameterType="org.dubbo.pojo.bean.user.CardMain" resultType="org.dubbo.pojo.bean.user.ClentVip">
+    select *
+        from c_client_vip@bojun
+        where unionid =#{unionId}
+        and cardno &lt;&gt; #{cardNo}  and ISACTIVE = 'Y'
+        order by Integral asc
+
+    </select>
+
+    <select id="getClentVipByUnionidCount" parameterType="org.dubbo.pojo.bean.user.CardMain" resultType="java.lang.Long">
+        select sum(integral)
+        from c_client_vip@bojun
+        where unionid =#{unionId}
+        and cardno &lt;&gt; #{cardNo}  and ISACTIVE = 'Y'
+        order by Integral asc
+
+    </select>
+
+
+    <update id="updatetCustjftot" parameterType="org.dubbo.pojo.bean.user.Custjftot">
+        update custjftot@bojun set cjtjf=cjtjf-#{integral} where cjtcid=#{clentVipId} and cjtno=#{batch}
+
+    </update>
+
+    <select id="getCustjftotByUnionid" resultType="org.dubbo.pojo.bean.user.Custjftot" parameterType="org.dubbo.pojo.bean.user.Custjftot">
+
+        SELECT c.cjtcid as clentVipId, c.cjtno as batch, c.cjtjf as integral,m.openid as openid
+          FROM custjftot@bojun c
+         inner join c_client_vip@bojun b
+            on c.cjtcid = b.id
+           and b.ISACTIVE = 'Y'
+         inner join cardmain m
+            on b.cardno = m.cardno and m.unionid = #{unionid} and m.openid &lt;&gt;#{openid}
+         where
+            c.cjtflag = 'Y' and c.cjtno=#{batch}  and c.cjtjf>0
+         order by c.cjtno asc
+
+    </select>
+
+
+    <select id="getCustjftotCountByUnionid" resultType="java.lang.Long" parameterType="org.dubbo.pojo.bean.user.Custjftot">
+
+        SELECT sum(c.cjtjf)
+        FROM custjftot@bojun c
+        inner join c_client_vip@bojun b
+        on c.cjtcid = b.id
+        and b.ISACTIVE = 'Y'
+        inner join cardmain m
+        on b.cardno = m.cardno and m.unionid = #{unionid} and m.openid &lt;&gt;#{openid}
+        where
+        c.cjtflag = 'Y' and c.cjtno=#{batch}  and c.cjtjf>0
+        order by c.cjtno asc
+
+    </select>
+
+
+
+    <select id="getUserIntergralByUnionid" parameterType="org.dubbo.pojo.bean.user.Custjftot" resultType="java.lang.Integer">
+        SELECT sum(c.cjtjf ) as allIntegral
+          FROM custjftot@bojun c
+         inner join c_client_vip@bojun b
+            on c.cjtcid = b.id
+           and b.ISACTIVE = 'Y'
+         inner join cardmain m
+            on b.cardno = m.cardno and  m.unionid = #{unionid}
+          where
+            c.cjtflag = 'Y' and c.cjtno=#{batch} and c.cjtjf>0
+           group by c.cjtno
+         order by c.cjtno asc
+
+
+    </select>
+
+    <select id="getClentVipInfo" resultType="org.dubbo.pojo.bean.user.ClentVip"  parameterType="java.lang.String">
+        Select b.id,b.integral From c_client_vip@bojun b
+           inner join cardmain m on b.cardno = m.cardno and m.openid=#{openid}
+         where     b.ISACTIVE = 'Y'
+    </select>
+
+    <insert id="insertCustjftot" parameterType="org.dubbo.pojo.bean.user.Custjftot">
+        insert INTO  custjftot@bojun (CJTCID,CJTNO,CJTJF,CJTFLAG)  VALUES (#{clentVipId},#{batch},#{integral},'Y')
+
+    </insert>
+
+    <update id="updatetAddCustjftot" parameterType="org.dubbo.pojo.bean.user.Custjftot">
+        update custjftot@bojun set cjtjf=cjtjf+#{integral} where cjtcid=#{clentVipId} and cjtno=#{batch}
+
+    </update>
+
+    <select id="getCustjftotBy" resultType="org.dubbo.pojo.bean.user.Custjftot" parameterType="org.dubbo.pojo.bean.user.Custjftot">
+  SELECT c.cjtcid as clentVipId, c.cjtno as batch, c.cjtjf as integral
+          FROM custjftot@bojun c
+         inner join c_client_vip@bojun b
+            on c.cjtcid = b.id
+           and b.ISACTIVE = 'Y'
+         inner join cardmain m
+            on b.cardno = m.cardno and m.openid = #{openid}
+         where   c.cjtno=#{batch}
+           and c.cjtflag = 'Y' order by c.cjtno asc
+
+    </select>
+</mapper>

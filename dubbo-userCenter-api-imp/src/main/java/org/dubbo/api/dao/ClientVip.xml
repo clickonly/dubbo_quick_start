@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.ClientVipDao">
+        <select id="getClientVipInfo" parameterType="org.dubbo.pojo.bean.user.UserInfo" resultType="org.dubbo.pojo.bean.user.UserInfo">
+                select c.id,
+                       c.vipname       as nickName,
+                       c.vipename      as realName,
+                       c.sex,
+                       c.birthday,
+                       c.mobil         as tel,
+                       c.email,
+                       c.c_store_id    as cStoreId,
+                       c.c_customer_id as cCustomerId,
+                       c.integral   as cardIntegral,
+                       c.wxopenid      as openId,
+                       c.memberno      as groupId,
+                       c.cardno,
+                       c.unionid   as unionId,
+                       c.c_viptype_id  as vipTypeId,
+                       t.name          as vipTypeName,
+                       t.discount,
+                       g.cardno        as groupCardNo,
+                       s.code as storeCode
+                  from c_client_vip@bojun c
+                 inner join c_viptype@bojun t
+                    on c.c_viptype_id = t.id
+                   and t.isactive = 'Y'
+                 inner join c_client_vip@bojun g
+                    on c.memberno = g.id
+                   and g.isactive = 'Y'
+                 left join  c_store@bojun s on c.c_store_id=s.id and  s.isactive='Y'
+                 where c.wxopenid = #{openId} and c.openmode != 'JT'
+                   and c.unionid = #{unionId}
+                   and c.isactive = 'Y'
+        </select>
+
+    <select id="getUserIntergral" resultType="java.lang.Long" parameterType="java.lang.String">
+        select sum(c.integral)
+        from c_client_vip@bojun c
+        where 1=1
+        and c.openmode != 'JT' and  c.ISACTIVE='Y'
+        and c.unionid=#{unionid}
+
+    </select>
+
+    <update id="updateIntergral" parameterType="org.dubbo.pojo.bean.user.UserInfo">
+        update c_client_vip@bojun set integral=integral+#{allIntegral}
+        where wxopenid = #{openId}
+        and unionid = #{unionId} and openmode != 'JT'
+        and isactive = 'Y'
+
+    </update>
+
+    <update id="updateIntergralById"  parameterType="org.dubbo.pojo.bean.user.UserInfo">
+       update c_client_vip@bojun set integral=integral+#{allIntegral} where id=#{id} and openmode != 'JT'
+
+    </update>
+    
+    <select id="getUserRealIntergral" resultType="java.lang.Long" parameterType="java.lang.Long">
+      select integral   from c_client_vip@bojun c where id=#{id} and openmode != 'JT'
+
+    </select>
+    <select id="gerOrtherIntergral" resultType="java.lang.Long" parameterType="org.dubbo.pojo.bean.user.UserInfo">
+        SELECT  sum(integral) from  c_client_vip@bojun c
+        where 1=1
+        and c.openmode != 'JT' and  c.ISACTIVE='Y'
+        and c.unionid=#{unionId} and c.id !=#{id}
+
+    </select>
+    <select id="getOrtherUserInfo" resultType="org.dubbo.pojo.bean.user.UserInfo" parameterType="org.dubbo.pojo.bean.user.UserInfo">
+        SELECT    c.integral as cardIntegral ,id
+        from  c_client_vip@bojun c
+        where 1=1
+        and c.openmode != 'JT' and  c.ISACTIVE='Y'
+        and c.unionid=#{unionId} and c.id !=#{id} and c.integral>0
+
+    </select>
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivityLogDao" >
+
+    <resultMap id="BaseResultMap" type="org.dubbo.pojo.bean.activity.ActivityWebLog" >
+        <id column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="ACTIVITY_ID" property="activityId" jdbcType="VARCHAR" />
+        <result column="OPENID" property="openId" jdbcType="VARCHAR" />
+        <result column="UNIONID" property="unionId" jdbcType="VARCHAR" />
+        <result column="WEID" property="weid" jdbcType="TIMESTAMP" />
+        <result column="ADDTIME" property="addTime" jdbcType="VARCHAR" />
+        <result column="MENU_TYPE" property="menuType" jdbcType="VARCHAR" />
+        <result column="URL" property="url" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        ID, ACTIVITY_ID, OPENID, UNIONID, WEID, ADD_TIME, MENU_TYPE, URL
+    </sql>
+
+    <insert id="logInsert" parameterType="org.dubbo.pojo.dto.activity.ActivityLogDto">
+      INSERT INTO ACTIVITY_WEB_LOG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            ID,
+            <if test="activityId != null" >
+                activity_id,
+            </if>
+            <if test="openId != null" >
+                openid,
+            </if>
+            <if test="unionId != null" >
+                unionid,
+            </if>
+            <if test="weid != null" >
+                weid,
+            </if>
+            add_time,
+            <if test="type != null" >
+                menu_type,
+            </if>
+            <if test="url != null" >
+                url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            seq_activity_web_log.nextval,
+            <if test="activityId != null" >
+                #{activityId},
+            </if>
+            <if test="openId != null" >
+                #{openId},
+            </if>
+            <if test="unionId != null" >
+                #{unionId},
+            </if>
+            <if test="weid != null" >
+                #{weid},
+            </if>
+            sysdate,
+            <if test="type != null" >
+                #{type},
+            </if>
+            <if test="url != null" >
+                #{url},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getUserList" resultType="java.lang.String" parameterType="org.dubbo.pojo.dto.activity.ActivityLogDto">
+        select openid from ACTIVITY_WEB_LOG where activity_id = #{activityId} group by openid
+    </select>
+
+    <select id="getUserUrlClickList" resultMap="BaseResultMap"
+            parameterType="org.dubbo.pojo.dto.activity.ActivityLogDto">
+        select url,openid,to_char(add_time,'yyyy:mm:dd hh24:mi:SS') addtime from
+            (select url,openid,add_time,rownum as myrownum
+            FROM ACTIVITY_WEB_LOG WHERE activity_id = #{activityId})
+        where myrownum &gt; #{start} and myrownum &lt; #{end}
+    </select>
+
+    <select id="getUserUrlClickListSize" resultType="java.lang.Integer">
+        select COUNT (openid)
+            FROM ACTIVITY_WEB_LOG
+    </select>
+
+
+</mapper>

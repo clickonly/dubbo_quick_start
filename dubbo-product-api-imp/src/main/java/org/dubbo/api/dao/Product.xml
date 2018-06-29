@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.ProductDao">
+	<!-- 支持缓存配置 -->
+
+    <parameterMap type="java.util.Map" id="paramsMap">
+        <parameter property="p_rentid" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="p_weid" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="p_openid" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="p_goodsid" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="RET" mode="OUT" jdbcType="VARCHAR"/>
+        <parameter property="ERRMSG" mode="OUT" jdbcType="VARCHAR"/>
+    </parameterMap>
+
+    <select id="getGoodsListPage" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+            resultType="org.dubbo.pojo.bean.product.GoodsView">
+        SELECT *
+        FROM (SELECT T.*, ROWNUM RN
+                FROM (select distinct a.id                       goodsid,
+                            a.name,
+                            a.style,
+                            a.isnew,
+                            a.ishot,
+                            a.memo3,
+                            e.imgurl                   img,
+                            a.price,
+                            a.weid,
+                            a.code,
+                            c.sort                     sort1,
+                            b.sort                     sort2,
+                            a.order1,
+                            a.orderindex               as goodsindex,
+                            hdpop.getgoodsinfo(#{openId}, a.id) listinfo,
+                            a.LIFESTART,
+                            goodsDetalCount.Goodscount,f.orderindex
+                            from wx_goods_base a
+                            inner join wx_goods_base_item b
+                            on a.id = b.goods_base_id
+                            inner join style_group f
+                            on a.style = f.style
+                            inner join wx_goods_target c
+                            on b.goods_target_id = c.id
+                            inner join wx_mall_goodsimg e
+                            on a.code = e.code
+                            left join GOODS_DETAL_COUNT goodsDetalCount
+                            on a.id = goodsDetalCount.goodsid
+                            where a.status = 'Y'
+                            and e.imgtype = '1'
+                            and e.status = 'Y'
+                    <if test="weId !=null and weId !='' ">
+                        and a.weId = #{weId}
+                    </if>
+
+                    <if test="classVal!=null and classVal!=''">
+                        and (a.style=#{classVal} or a.code=#{classVal} or  a.name=#{classVal})
+
+                    </if>
+                    <if test="orderVal!=null and orderVal!=''">
+                        <if test="orderVal=='price'">
+                            order by  a.price,f.orderindex,a.id
+                        </if>
+                        <if test="orderVal=='priceDesc'">
+                            order by  a.price desc,f.orderindex desc,a.id desc
+                        </if>
+                        <if test="orderVal=='hot'">
+                           <!-- order by orderindex,decode(order1,'',-1,null,-1,-order1),goodsid-->
+
+                            order by  goodsDetalCount.Goodscount desc nulls last,f.orderindex desc,a.id desc
+                        </if>
+                        <if test="orderVal=='new'">
+                            order by  a.LIFESTART desc ,f.orderindex desc,a.id desc
+                        </if>
+                        <if test="orderVal!='new' and orderVal!='price' and orderVal !='priceDesc' and orderVal!='hot'">
+                            order by  sort1,sort2,f.orderindex,a.id desc
+                        </if>
+                    </if>
+                    <if test="orderVal==null or orderVal==''">
+                        order by a.LIFESTART desc, f.orderindex desc,a.id desc
+                    </if>
+                 ) T
+                WHERE <![CDATA[ ROWNUM <= #{endRow}]]>)
+        WHERE <![CDATA[ RN > #{startRow}]]>
+
+    </select>
+    <select id="getGoodsListCount" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+            resultType="java.lang.Integer">
+        select count(distinct a.id )
+                from wx_goods_base a
+                inner join wx_goods_base_item b
+                on a.id = b.goods_base_id
+                inner join style_group f
+                on a.style = f.style
+                inner join wx_goods_target c
+                on b.goods_target_id = c.id
+                inner join wx_mall_goodsimg e
+                on a.code = e.code
+                left join GOODS_DETAL_COUNT goodsDetalCount
+                on a.id = goodsDetalCount.goodsid
+                where a.status = 'Y'
+                and e.imgtype = '1'
+                and e.status = 'Y'
+                <if test="weId !=null and weId !='' ">
+                    and a.weId = #{weId}
+                </if>
+
+                <if test="classVal!=null and classVal!=''">
+                    and (a.style=#{classVal} or a.code=#{classVal} or  a.name=#{classVal})
+
+                </if>
+
+    </select>
+
+    <select id="isCollect" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+            resultType="java.lang.String">
+        select decode(count(1), 0, 'N', 1, 'Y', 'Y') iscollect
+        from goods_collect
+        where rentid =#{rentId}
+        and weid =#{weId}
+        and openid =#{openId}
+        and goodsid =#{goodsId}
+    </select>
+
+    <select id="getProductInfo" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+            resultType="org.dubbo.pojo.bean.product.GoodsInfo">
+        select x.*, y.colorname, ROUND(x.price * 0.8) ys
+        from (select *
+        from (SELECT a.id,
+        a.rentid,
+        a.weid,
+        a.code,
+        a.name,
+        a.typeid,
+        a.unit,
+        a.orderindex,
+        a.linkid,
+        a.status,
+        a.lifestart,
+        a.lifeend,
+        a.buy_limit,
+        a.isnew,
+        a.isrecomment,
+        a.ishot,
+        a.ispop,
+        a.price,
+        a.ori_price,
+        a.style,
+        a.order1,
+        hdpop.getgoodsinfo(#{openId}, a.id) listinfo
+        FROM view_wx_goods_base a
+        WHERE 1 = 1
+        <if test="goodsId !=null and goodsId!=''">
+            and id = #{goodsId}
+        </if>
+        ) a
+        left join (select replace(wm_concat(imgurl), ',', ';') as imgurl,
+        code as bcode
+        from (select imgurl, orderindex, code
+        from wx_mall_goodsimg
+        where imgtype = 6
+        <if test="rentId !=null and rentId!=''">
+            and rentid = #{rentId}
+        </if>
+        <if test="weId !=null and weId!=''">
+            and weid = #{weId}
+        </if>
+        <if test="code !=null and code!=''">
+            and code = #{code}
+        </if>
+        ORDER BY to_number(orderindex))
+        group by code) b
+        on a.code = b.bcode) x,
+        (select code, colorname
+        from view_wx_goods_sku_property
+        where code = #{code}
+        group by code, colorname) y
+        where x.code = y.code
+    </select>
+
+    <select id="getModelImage" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+            resultType="org.dubbo.pojo.bean.product.GoodsImage">
+        select (replace(counter,',',';')) imgurl,code from(
+        SELECT code,MAX(KEY) AS counter FROM (
+        select code,WM_CONCAT(imgurl) OVER(PARTITION BY code ORDER BY code) KEY,
+        row_number() over(PARTITION BY code ORDER BY code desc) rs
+        from (
+        select imgurl,orderindex,code
+        from wx_mall_goodsimg
+        where imgtype = 2
+        <if test="rentId !=null and rentId!=''">
+            and rentid = #{rentId}
+        </if>
+        <if test="weId !=null and weId!=''">
+            and weid = #{weId}
+        </if>
+        <if test="code !=null and code!=''">
+            and code = #{code}
+        </if>
+        ORDER BY to_number(orderindex)
+        )
+        ) A
+        GROUP BY code )
+
+    </select>
+
+    <select id="getGoodsElement" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+        resultType="org.dubbo.pojo.bean.product.GoodsElement">
+        select X1.ID, X1.STYLEID, X1.STYLOGO_NAME, X1.STYLOGO_REMARK
+        from wx_element X1,
+        (select max(id) as pid
+        from (select a.id, a.stylogo_name
+        from wx_element a
+        where a.styleid = #{styleId})
+        group by stylogo_name) X2
+        where X1.ID = X2.PID
+        order by stylogo_name
+    </select>
+
+    <select id="getGoodsSize" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+            resultType="org.dubbo.pojo.bean.product.GoodsSize">
+        select sizename, sizedetail, sizecode
+        from view_wx_goods_sku_property1
+        where 1 = 1
+        and code =#{code}
+        group by sizename, sizedetail, sizecode
+        order by sizecode
+    </select>
+
+    <select id="getGoodSizeTable" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+        resultType="org.dubbo.pojo.bean.product.GoodsSizeTableItem">
+        select a.* from WX_GOODS_BWDEATAIL a,wx_goods_base b
+        where a.skcno=b.code
+        and b.rentid=#{rentId}
+        and b.weid=#{weId}
+        and a.skcno=#{code}
+        order by orderno asc
+    </select>
+
+    <select id="getCartSumGoods" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+        resultType="java.lang.Integer">
+        select sum(b.sl)
+        from view_wx_goods_base a, view_wx_goods_cart b
+        where b.goodsid = a.id
+        and a.status = 'Y'
+        and b.openid = #{openId}
+    </select>
+
+
+    <select id="getGoodsListSearchPage"  parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+            resultType="org.dubbo.pojo.bean.product.GoodsView">
+
+        SELECT *
+            FROM (select t.*, ROWNUM RN
+                from (select distinct a.id goodsid,
+                            a.name,
+                            a.unit,
+                            a.style,
+                            a.ishot,
+                            a.isnew,
+                            a.memo3,
+                            e.imgurl img,
+                            a.price,
+                            a.weid,
+                            a.code,
+                            hdpop.getgoodsinfo(#{openId}, a.id) listinfo,
+                            b.sort itemsort,
+                            c.sort targetsort,a.lifestart,goodsDetalCount.Goodscount
+                            from wx_goods_base a
+                            inner join wx_goods_base_item b
+                            on a.id = b.goods_base_id
+                            inner join wx_goods_target c
+                            on b.goods_target_id = c.id
+                            inner join wx_mall_goodsimg e
+                            on a.code = e.code
+                            left join new_activity j1
+                            on c.activity_id = j1.id
+                            left join GOODS_DETAL_COUNT goodsDetalCount
+                            on a.id = goodsDetalCount.goodsid
+                            where e.imgtype = '1'
+                            and e.status = 'Y'
+                            and a.status = 'Y'
+                    <if test="rentId!=null and rentId!=''">
+                       and a.rentid=#{rentId}
+                    </if>
+                    <if test="weId!=null and weId!=''">
+                        and a.weid=#{weId}
+                    </if>
+
+                    <if test="typeVal!=null and typeVal!=''">
+                        and a.memo2 LIKE concat(concat('%',#{typeVal}),'%')
+
+                    </if>
+                    <if test="classVal!=null and classVal!=''">
+                        and a.style=#{classVal}
+                    </if>
+
+                    <if test="orderVal!=null and orderVal!=''">
+                        <if test="orderVal=='price'">
+                            order by  price  ,a.id
+                        </if>
+                        <if test="orderVal=='priceDesc'">
+                            order by  price desc  ,a.id
+                        </if>
+                        <if test="orderVal=='hot'">
+                         <!--   order by  decode(ishot,'Y',1,'N',2,3),goodsid-->
+                            order by  goodsDetalCount.Goodscount desc nulls last,a.lifestart desc  ,a.id
+                        </if>
+                        <if test="orderVal=='new'">
+                            order by  a.lifestart desc  ,a.id
+                        </if>
+                        <if test="orderVal!='new' and orderVal!='price' and orderVal !='priceDesc' and orderVal!='hot'">
+                            order by   c.sort,b.sort desc ,a.id
+                        </if>
+                    </if>
+                    <if test="orderVal==null or orderVal==''">
+                        order by c.sort, b.sort ,a.lifestart,a.id
+                    </if>
+        ) t
+             WHERE <![CDATA[ ROWNUM <= #{endRow}]]>)
+          WHERE <![CDATA[ RN > #{startRow}]]>
+
+    </select>
+
+    <select id="getGoodsListSearchPageCount" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto" resultType="java.lang.Integer">
+        select count(distinct a.id)
+        from wx_goods_base a
+        inner join wx_goods_base_item b on a.id = b.goods_base_id
+        inner join wx_goods_target c on b.goods_target_id = c.id
+        inner join wx_mall_goodsimg e on a.code = e.code
+        left join new_activity j1
+        on c.activity_id = j1.id
+        left join GOODS_DETAL_COUNT goodsDetalCount on a.id=goodsDetalCount.goodsid
+        where  e.imgtype = '1'
+        and e.status = 'Y'
+        and a.status = 'Y'
+
+        <if test="rentId!=null and rentId!=''">
+            and a.rentid=#{rentId}
+        </if>
+        <if test="weId!=null and weId!=''">
+            and a.weid=#{weId}
+        </if>
+
+        <if test="typeVal!=null and typeVal!=''">
+            and a.memo2 LIKE concat(concat('%',#{typeVal}),'%')
+        </if>
+        <if test="classVal!=null and classVal!=''">
+            and a.style=#{classVal}
+        </if>
+    </select>
+    <select id="getTopCarouselImgs" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto" resultType="java.lang.String">
+        select imgurl
+        from wx_mall_goodsimg
+        where imgtype = 6
+        and rentid = 1
+        <if test="weId!=null and weId!=''">
+             and weid = #{weId}
+        </if>
+        <if test="code!=null and code!=''">
+            and code = #{code}
+        </if>
+        order by orderindex
+    </select>
+
+
+    <select id="getGoodsListByHeadPage" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+            resultType="org.dubbo.pojo.bean.product.GoodsView">
+        SELECT *
+        FROM (SELECT T.*, ROWNUM RN
+        FROM (select distinct a.*,
+        hdpop.getgoodsinfo(#{openId},
+        a.goodsid) listinfo,goodsDetalCount.Goodscount
+        from VIEW_WX_GOODS_LIST_20180119 a
+        left join GOODS_DETAL_COUNT goodsDetalCount on a.goodsid=goodsDetalCount.goodsid
+        where 1 = 1
+        <if test="weId !=null and weId !='' ">
+            and a.weId = #{weId}
+        </if>
+        <if test="typeVal!=null and typeVal!=''">
+            <if test="typeVal=='all'">
+                and type =#{typeVal}
+            </if>
+            <if test="typeVal!='all'">
+                and headid =#{typeVal}
+            </if>
+        </if>
+        <if test="classVal!=null and classVal!=''">
+            and (style=#{classVal} or code=#{classVal} or  name=#{classVal})
+
+        </if>
+        <if test="orderVal!=null and orderVal!=''">
+            <if test="orderVal=='price'">
+                order by  price,a.goodsid
+            </if>
+            <if test="orderVal=='priceDesc'">
+                order by  price desc,a.goodsid desc
+            </if>
+            <if test="orderVal=='hot'">
+                <!-- order by orderindex,decode(order1,'',-1,null,-1,-order1),goodsid-->
+
+                order by  goodsDetalCount.Goodscount desc nulls last,a.goodsid desc
+            </if>
+            <if test="orderVal=='new'">
+                order by orderindex,goodsindex,a.goodsid
+            </if>
+            <if test="orderVal!='new' and orderVal!='price' and orderVal !='priceDesc' and orderVal!='hot'">
+                order by  sort1,sort2 desc,a.goodsid desc
+            </if>
+        </if>
+        <if test="orderVal==null or orderVal==''">
+            order by  sort1,sort2,a.goodsid
+        </if>
+        ) T
+        WHERE <![CDATA[ ROWNUM <= #{endRow}]]>)
+        WHERE <![CDATA[ RN > #{startRow}]]>
+
+    </select>
+    <select id="getGoodsListCountByHead" parameterType="org.dubbo.pojo.dto.product.GoodsSearchDto"
+            resultType="java.lang.Integer">
+        select count(distinct a.goodsid)
+        from VIEW_WX_GOODS_LIST_20180119 a
+        left join GOODS_DETAL_COUNT goodsDetalCount on a.goodsid=goodsDetalCount.goodsid
+        where 1 = 1
+        <if test="weId !=null and weId !='' ">
+            and a.weid = #{weId}
+        </if>
+        <if test="typeVal!=null and typeVal!=''">
+            <if test="typeVal=='all'">
+                and type =#{typeVal}
+            </if>
+            <if test="typeVal!='all'">
+                and headid =#{typeVal}
+            </if>
+        </if>
+        <if test="classVal!=null and classVal!=''">
+            and (style=#{classVal} or code=#{classVal} or  name=#{classVal})
+
+        </if>
+
+    </select>
+
+    <select id="getAboutGoodsList" resultType="org.dubbo.pojo.bean.product.AboutGoods" parameterType="org.dubbo.pojo.dto.product.AboutGoodsDto">
+        select a.code,
+               a.price,
+               a.name as goodsname,
+               a.id as goodsid,
+               b.imgurl as modelpict,
+               hdpop.getgoodsinfo(#{openId}, a.id) listinfo
+      from wx_goods_base a, wx_mall_goodsimg b
+      where a.code = b.code
+           and b.imgtype = 1
+           and a.id in (Select TO_NUMBER(Trim(Column_Value)) Id
+                          From Table (Select Split_Str(getaboutgoods(#{goodsId}), ',')
+                                        From Dual))
+
+
+    </select>
+
+    <select id="getGoodsStock" parameterType="java.lang.Long" resultType="org.dubbo.pojo.bean.product.GoodsStock">
+        select id as skuId,fgetgoodsskusl(id) as stocknum from wx_goods_sku where goodsid =#{goodsId}
+    </select>
+
+    <select id="callInsertCollect" statementType="CALLABLE" parameterMap="paramsMap">
+        <![CDATA[
+            call WXADDRESS.INSERT_COLLECT(?,?,?,?,?,?)
+              ]]>
+    </select>
+
+    <select id="getGoodsStockInfo" parameterType="java.lang.String" resultType="org.dubbo.pojo.bean.product.GoodsStockInfo">
+        select * from view_wx_goods_sku_property
+        where 1=1
+        and code=#{code}
+        and goodsid  &lt; '20000000'
+        order by sizecode
+
+    </select>
+</mapper>

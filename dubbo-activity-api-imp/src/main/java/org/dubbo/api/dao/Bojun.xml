@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.BojunDao">
+
+    <select id="getClentVip" parameterType="org.dubbo.pojo.bean.user.ClentVip" resultType="org.dubbo.pojo.bean.user.ClentVip">
+        select * from c_client_vip@bojun
+        where 1=1
+        <if test="cardno != null and cardno!=''">
+            and cardno=#{cardno}
+        </if>
+
+    </select>
+
+    <select id="getIntegralCount" parameterType="org.dubbo.pojo.bean.user.ClentVip" resultType="java.lang.Integer">
+          Select Nvl(Sum(a.Integral), 0)
+              FROM C_CLIENT_VIP@BOJUN a
+             WHERE 1=1
+             <if test="isactive !=null and isactive !=''">
+                 AND a.isactive =#{isactive}
+             </if>
+             <if test="vipstate !=null and vipstate!=''">
+                 AND A.VIPSTATE = #{vipstate}
+             </if>
+            <if test="unionid !=null and unionid!=''">
+                and a.unionid = #{unionid}
+            </if>
+    </select>
+
+    <update id="updateIntegral" parameterType="org.dubbo.pojo.bean.user.ClentVip" >
+        update C_CLIENT_VIP@BOJUN set Integral=Integral+#{integral_add} where id=#{id}
+
+    </update>
+
+    <select id="getClentVipByUnionid" parameterType="org.dubbo.pojo.bean.user.CardMain" resultType="org.dubbo.pojo.bean.user.ClentVip">
+        select *
+        from c_client_vip@bojun
+        where cardno = #{cardNo}
+        union all
+        select *
+        from (select *
+        from c_client_vip@bojun
+        where unionid =#{unionId}
+        and cardno &lt;&gt; #{cardNo}
+        order by Integral asc)
+
+    </select>
+
+    <update id="subIntegral" parameterType="org.dubbo.pojo.bean.user.ClentVip" >
+        update C_CLIENT_VIP@BOJUN set Integral=Integral-#{integral_add} where id=#{id}
+
+    </update>
+</mapper>

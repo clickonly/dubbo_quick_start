@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.VoucherDao">
+
+
+    <parameterMap type="java.util.Map" id="recommendMap">
+        <parameter property="p_openid" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="p_id" mode="IN" jdbcType="INTEGER"/>
+        <parameter property="p_zs" mode="IN" jdbcType="INTEGER"/>
+        <parameter property="ret" mode="OUT" jdbcType="VARCHAR"/>
+        <parameter property="retmsg" mode="OUT" jdbcType="VARCHAR"/>
+    </parameterMap>
+
+    <select id="getVoucherListBean" resultType="org.dubbo.pojo.bean.voucher.VoucherListBean" parameterType="java.lang.String">
+      SELECT *
+          FROM view_vouchers_al_new
+         where unionid = #{unionid}
+         order by px, insertdate desc, valid_date desc
+    </select>
+
+
+
+    <select id="CallEchangeVoucher" statementType="CALLABLE" parameterMap="recommendMap" >
+        <![CDATA[
+            call newactivity.r$sendvou_sc(?,?,?,?,?)
+              ]]>
+
+    </select>
+
+</mapper>

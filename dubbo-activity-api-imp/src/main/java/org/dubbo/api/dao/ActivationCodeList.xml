@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivationCodeListDao" >
+
+    <select id="getActivationCodeList" parameterType="org.dubbo.pojo.bean.activity.ActivityWinResult"
+            resultType="org.dubbo.pojo.bean.activity.ActivationCodeList">
+
+          select t.id,t.activation_code  as activationCode  from ACTIVATION_CODE_list t where
+           t.prize_id=#{prizeId} and t.activity_id=#{activityId} and
+           t.status='N' AND Rownum=1
+    </select>
+
+    <update id="updateStatus" parameterType="org.dubbo.pojo.bean.activity.ActivationCodeList">
+        update ACTIVATION_CODE_list
+        set status='Y',ADD_TIME=SYSDATE  where id=#{id}
+
+    </update>
+
+</mapper>

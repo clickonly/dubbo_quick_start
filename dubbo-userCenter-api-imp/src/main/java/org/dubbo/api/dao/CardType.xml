@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.CardTypeDao">
+
+
+    <select id="getCardType" parameterType="org.dubbo.pojo.bean.user.CardType" resultType="org.dubbo.pojo.bean.user.CardType">
+        select
+        id,
+        name,
+        weid,
+        linksource as linkSource,
+        ismin as isMin ,
+        linkid as linkId ,
+        levelid as levelId,
+        zk,image,memo,nextleve as nextLevel,pp
+         from CARDTYPE where 1=1
+         <if test="isMin!=null and isMin!=''">
+             and ismin=#{isMin}
+         </if>
+        <if test="weid!=null and weid!=''">
+            and weid=#{weid}
+        </if>
+
+    </select>
+
+
+    <select id="getCardNo" resultType="java.lang.String">
+
+        SELECT SEQ_CARDNO.NEXTVAL FROM dual
+    </select>
+
+    <select id="getCardTypeApply" resultType="org.dubbo.pojo.bean.user.MiddleEntity">
+        select id as a_id, linkid as a_linkid
+        from Cardtypeapply b, cardtype a
+        where a.id = b.cardtype
+        and a.weid = #{weid}
+        and userphone = #{userphone}
+        and rownum = 1
+    </select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.WxFansDao">
+
+
+<select id="getWxFans" resultType="org.dubbo.pojo.bean.user.WxFans" parameterType="java.lang.String"> <!-- -->
+    select
+    w.rentid,
+    w.weid,
+    w.openid,
+    w.nickname,
+    w.sex,
+    w.language,
+    w.province,
+    w.city,
+    w.country,
+    w.headimgurl,
+    w.subscribe,
+    w.subscribe_time,
+    w.groupidissync,
+    w.syncdate,
+    w.insertdate,
+    w.havecard,
+    w.unionid,
+    w.fssourcetype
+    from wx_fans w where openid=#{openId}
+</select>
+
+<select id="getWxFansList" resultType="org.dubbo.pojo.bean.user.WxFans" parameterType="java.lang.String"> <!-- -->
+    select
+    w.rentid,
+    w.weid,
+    w.openid,
+    w.nickname,
+    w.sex,
+    w.language,
+    w.province,
+    w.city,
+    w.country,
+    w.headimgurl,
+    w.subscribe,
+    w.subscribe_time,
+    w.groupidissync,
+    w.syncdate,
+    w.insertdate,
+    w.havecard,
+    w.unionid,
+    w.fssourcetype
+    from wx_fans where unionid=#{unionId}
+</select>
+
+</mapper>

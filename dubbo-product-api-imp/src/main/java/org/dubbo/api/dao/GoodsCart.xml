@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.GoodsCartDao">
+
+    <select id="getGoodsCartList" parameterType="org.dubbo.pojo.bean.user.CardMain" resultType="org.dubbo.pojo.bean.product.GoodsCart">
+        select b.price,
+               a.id,
+               a.rentid as rentId,
+               a.weid,
+               a.openid as openId,
+               a.skuid as skuId,
+               a.sl,
+               a.price as sumprice,
+               a.channel,
+               a.goodsid as goodsId,
+               b.name,
+               c.colorname as colorName,
+               c.code,
+               c.sizename as sizeName,
+               c.icon_url as iconUrl,
+               decode(a.weid,
+                      '8348044436',
+                      'JNBYHOME',
+                      '1066593236',
+                      '悖论集',
+                      '4',
+                      'jnbybyJNBY',
+                      '2822095692',
+                      'less',
+                      '6924108367',
+                      'PommeDeTerre',
+                      '2738574294',
+                      'JNBY',
+                      '2504948039',
+                      '速写',
+                      'JNBY') gsName,
+               decode(a.weid,
+                      '8348044436',
+                      'jnbyh',
+                      '1066593236',
+                      'paradox',
+                      '4',
+                      'tjnby',
+                      '2822095692',
+                      'less',
+                      '6924108367',
+                      'pomme',
+                      '2738574294',
+                      'jnby',
+                      '2504948039',
+                      'croquis',
+                      'jnby') as hash,
+                     hdpop.getgoodsinfo(#{openId}, a.goodsid) listinfo
+          from view_wx_goods_cart         a,
+               view_wx_goods_base         b,
+               view_wx_goods_sku_property c
+         where a.GOODSID = b.id
+           and a.skuid = c.skuid
+           and status = 'Y'
+           and a.openid =#{openId}
+         order by a.weid, fsdate desc
+    </select>
+
+    <select id="getGoodsCardCount"  parameterType="org.dubbo.pojo.bean.user.CardMain"  resultType="java.lang.Integer">
+          select sum(a.SL) from
+                view_wx_goods_cart         a,
+               view_wx_goods_base         b,
+               view_wx_goods_sku_property c
+         where a.GOODSID = b.id
+           and a.skuid = c.skuid
+           and status = 'Y' and   a.openid =#{openId}
+    </select>
+</mapper>

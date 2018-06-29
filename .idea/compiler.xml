@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="boot" />
+        <module name="dubbo-action" />
+        <module name="dubbo-activity-api" />
+        <module name="dubbo-activity-api-imp" />
+        <module name="dubbo-core" />
+        <module name="dubbo-job" />
+        <module name="dubbo-pojo" />
+        <module name="dubbo-product-api" />
+        <module name="dubbo-product-api-imp" />
+        <module name="dubbo-userCenter-api" />
+        <module name="dubbo-userCenter-api-imp" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="1.7">
+      <module name="boot" target="1.8" />
+      <module name="dubbo-action" target="1.7" />
+      <module name="dubbo-activity-api" target="1.7" />
+      <module name="dubbo-activity-api-imp" target="1.7" />
+      <module name="dubbo-core" target="1.7" />
+      <module name="dubbo-job" target="1.7" />
+      <module name="dubbo-pojo" target="1.7" />
+      <module name="dubbo-product-api" target="1.7" />
+      <module name="dubbo-product-api-imp" target="1.7" />
+      <module name="dubbo-userCenter-api" target="1.7" />
+      <module name="dubbo-userCenter-api-imp" target="1.7" />
+      <module name="dubbo_shop_new" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

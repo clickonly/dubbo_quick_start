@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.WxQrcodeDao">
+
+
+    <select id="getWxQrcode" resultType="org.dubbo.pojo.bean.user.MiddleEntity"> <!-- -->
+        SELECT b.linkid as qr_linkid, b.type as qr_type
+        FROM wx_fans a, wx_qrcode b
+        WHERE a.rentid = b.rentid
+        AND a.weid = #{weid}
+        AND a.openid = #{openId}
+        AND a.sourceqrid = b.id
+    </select>
+
+
+</mapper>

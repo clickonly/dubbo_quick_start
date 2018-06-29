@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dubbo.api.dao.WxMessageTemplateDao">
+
+    <select id="getWxMessageTemplate" parameterType="org.dubbo.pojo.bean.wx.WxMessageTemplate" resultType="org.dubbo.pojo.bean.wx.WxMessageTemplate">
+      SELECT rentid,weid,id,type,name,messagetype as messageType ,templateformat ,valuecount as valueCount,status
+        FROM Wx_Message_Template
+       WHERE (rentid = #{rentid} or rentid = 0) --为0则为共用消息模板
+         AND (weid = #{weid} or weid = 0)
+         AND TYPE =#{type}
+         AND status =#{status}
+    </select>
+
+
+    <select id="getWxMessageTemplateById"  resultType="org.dubbo.pojo.bean.wx.WxMessageTemplate" parameterType="java.lang.Long">
+            SELECT rentid,
+                  weid,
+                  id,
+                  type,
+                  name,
+                  messagetype    as messageType,
+                  templateformat,
+                  valuecount     as valueCount,
+                  status
+             FROM Wx_Message_Template
+              where id=#{id} and status='Y'
+
+    </select>
+
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ErrorDataDao" >
+
+    <select id="getErrorDateList" resultType="org.dubbo.pojo.dto.error.ErrorDataDto">
+            select a.*, m.activity_name, v.unionid, v.wxopenid as openid
+              from (select count(*) as sumNum,
+                           t.activeid as activityId,
+                           t.c_vip_id as vipId
+                      from fa_vipintegral_ftp_local t
+                     where t.activeid in ('7', '8', '9', '10', '11', '12') and t.integral='500'
+                     group by t.c_vip_id, activeid) a
+             inner join activity_main m
+                on a.activityId = m.id
+             inner join c_client_vip@bojun v
+                on a.vipId = v.id
+              where sumNum>1
+
+    </select>
+
+</mapper>

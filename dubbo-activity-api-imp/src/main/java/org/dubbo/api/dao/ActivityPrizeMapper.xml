@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dubbo.api.dao.ActivityPrizeDao" >
+  <resultMap id="BaseResultMap" type="org.dubbo.pojo.bean.activity.ActivityPrize" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="ACTIVITY_ID" property="activityId" jdbcType="DECIMAL" />
+    <result column="PRIZE_NAME" property="prizeName" jdbcType="VARCHAR" />
+    <result column="PRIZE_TYPE" property="prizeType" jdbcType="VARCHAR" />
+    <result column="INTEGRAL" property="integral" jdbcType="DECIMAL" />
+    <result column="CASH" property="cash" jdbcType="DECIMAL" />
+    <result column="COUPON_ID" property="couponId" jdbcType="DECIMAL" />
+    <result column="PROBABILITY" property="probability" jdbcType="DECIMAL" />
+    <result column="ODDS" property="odds" jdbcType="DECIMAL" />
+    <result column="SORT" property="sort" jdbcType="DECIMAL" />
+    <result column="IMGURL" property="imgurl" jdbcType="VARCHAR" />
+    <result column="send_type" property="sendType" jdbcType="VARCHAR" />
+    <result column="DEPARTMENT" property="department" jdbcType="VARCHAR" />
+    <result column="JSON" property="json" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ACTIVITY_ID, PRIZE_NAME, PRIZE_TYPE, INTEGRAL, CASH, COUPON_ID, PROBABILITY,
+    ODDS, SORT, IMGURL,send_type,DEPARTMENT,JSON
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from ACTIVITY_PRIZE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+
+  <select id="selectByActivityId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List" />
+    from ACTIVITY_PRIZE
+    where activity_id = #{activityId,jdbcType=DECIMAL} order by SORT asc
+  </select>
+
+  <select id="getActivityPrize" resultMap="BaseResultMap" parameterType="org.dubbo.pojo.bean.activity.ActivityPrize" >
+    select
+    <include refid="Base_Column_List" />
+    from ACTIVITY_PRIZE
+    where ID = #{id,jdbcType=DECIMAL} and activity_id = #{activityId,jdbcType=DECIMAL}
+  </select>
+</mapper>
